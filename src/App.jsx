@@ -14,6 +14,7 @@ const tokens = {
     muted: 'rgba(255, 255, 255, 0.6)',
     mutedLight: 'rgba(255, 255, 255, 0.6)',
     border: 'rgba(255, 255, 255, 0.08)',
+    navActive: 'rgba(255, 255, 255, 0.15)',
   },
   font: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
   fontMono: '"JetBrains Mono", "SF Mono", monospace',
@@ -27,6 +28,23 @@ const tokens = {
     slow: '1000ms',
   },
 };
+
+// ============================================
+// JOB TITLES FOR DECRYPT EFFECT
+// ============================================
+const JOB_TITLES = [
+  'Software Developer',
+  'DevOps Engineer',
+  'System Engineer',
+  'ML Expert',
+  'Frontend Developer',
+  'Backend Developer',
+  'Data Engineer',
+  'Cloud Architect',
+  'IT Security',
+  'Embedded Engineer',
+  'Full Stack Developer',
+];
 
 // ============================================
 // CONTENT
@@ -366,43 +384,67 @@ const Marquee = ({ items }) => (
 );
 
 // ============================================
-// DECRYPTED TEXT - Now triggers on isActive prop
+// DECRYPTED TEXT - Shows job titles while scrambling
 // ============================================
-const DecryptedText = ({ text, speed = 50, maxIterations = 10, sequential = true, characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', isActive = false, delay = 0 }) => {
+const DecryptedText = ({ text, speed = 50, maxIterations = 10, sequential = true, useJobTitles = false, isActive = false, delay = 0 }) => {
   const [displayText, setDisplayText] = useState(text);
   const [hasAnimated, setHasAnimated] = useState(false);
-  const chars = useMemo(() => characters.split(''), [characters]);
+  
+  // Characters for number-only texts (stats)
+  const numberChars = '0123456789';
+  const letterChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   useEffect(() => {
-    // Reset when becoming inactive
     if (!isActive) {
       setHasAnimated(false);
       setDisplayText(text);
       return;
     }
     
-    // Don't re-animate if already done
     if (hasAnimated) return;
 
     const timeoutId = setTimeout(() => {
       let iteration = 0;
       let revealed = new Set();
       
+      // Check if text is only numbers
+      const isNumberOnly = /^\d+$/.test(text);
+      const chars = isNumberOnly ? numberChars : letterChars;
+      
       const interval = setInterval(() => {
         if (sequential) {
           if (revealed.size < text.length) {
             revealed.add(revealed.size);
-            setDisplayText(text.split('').map((char, i) => {
-              if (char === ' ') return ' ';
-              if (revealed.has(i)) return text[i];
-              return chars[Math.floor(Math.random() * chars.length)];
-            }).join(''));
+            
+            if (useJobTitles && !isNumberOnly) {
+              // Show random job title, truncated to match text length
+              const randomJob = JOB_TITLES[Math.floor(Math.random() * JOB_TITLES.length)];
+              const paddedJob = randomJob.padEnd(text.length, ' ').slice(0, text.length);
+              
+              setDisplayText(text.split('').map((char, i) => {
+                if (char === ' ') return ' ';
+                if (revealed.has(i)) return text[i];
+                return paddedJob[i] || chars[Math.floor(Math.random() * chars.length)];
+              }).join(''));
+            } else {
+              setDisplayText(text.split('').map((char, i) => {
+                if (char === ' ') return ' ';
+                if (revealed.has(i)) return text[i];
+                return chars[Math.floor(Math.random() * chars.length)];
+              }).join(''));
+            }
           } else {
             clearInterval(interval);
             setHasAnimated(true);
           }
         } else {
-          setDisplayText(text.split('').map((char) => char === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)]).join(''));
+          if (useJobTitles && !isNumberOnly) {
+            // Show random job title
+            const randomJob = JOB_TITLES[Math.floor(Math.random() * JOB_TITLES.length)];
+            setDisplayText(randomJob.slice(0, text.length).padEnd(text.length, ' '));
+          } else {
+            setDisplayText(text.split('').map((char) => char === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)]).join(''));
+          }
           iteration++;
           if (iteration >= maxIterations) {
             clearInterval(interval);
@@ -416,13 +458,13 @@ const DecryptedText = ({ text, speed = 50, maxIterations = 10, sequential = true
     }, delay);
 
     return () => clearTimeout(timeoutId);
-  }, [isActive, text, speed, maxIterations, sequential, chars, delay, hasAnimated]);
+  }, [isActive, text, speed, maxIterations, sequential, delay, hasAnimated, useJobTitles]);
 
   return <span aria-label={text}><span aria-hidden="true">{displayText}</span></span>;
 };
 
 // ============================================
-// FIXED NAVBAR (no expand on hover)
+// FIXED NAVBAR - Gray/transparent active state
 // ============================================
 const FixedNavbar = ({ activeSection, onNavigate }) => {
   return (
@@ -436,8 +478,8 @@ const FixedNavbar = ({ activeSection, onNavigate }) => {
       {[1, 2, 3, 4, 5, 6].map((num) => (
         <button key={num} onClick={() => onNavigate(num)} className="cursor-target" style={{
           width: '36px', height: '36px', borderRadius: '18px', border: 'none', cursor: 'none',
-          backgroundColor: activeSection === num ? tokens.colors.white : 'transparent',
-          color: activeSection === num ? tokens.colors.black : tokens.colors.muted,
+          backgroundColor: activeSection === num ? tokens.colors.navActive : 'transparent',
+          color: activeSection === num ? tokens.colors.white : tokens.colors.muted,
           fontSize: '11px', fontWeight: 500, fontFamily: tokens.fontMono,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: `all ${tokens.timing.fast} ${tokens.easing.hover}`,
@@ -529,7 +571,7 @@ export default function App() {
         </FadeIn>
         <FadeIn delay={500} isActive={activeSection === 1}>
           <h1 className="cursor-target" style={{ fontSize: 'clamp(120px, 20vw, 280px)', fontWeight: 400, letterSpacing: '-0.05em', color: tokens.colors.white, margin: 0, lineHeight: 0.85, fontFamily: tokens.font, marginLeft: '-8px' }}>
-            <DecryptedText text={CONTENT.hero.name} speed={100} sequential={false} maxIterations={8} isActive={activeSection === 1} />
+            <DecryptedText text={CONTENT.hero.name} speed={100} sequential={false} maxIterations={8} useJobTitles={true} isActive={activeSection === 1} />
           </h1>
         </FadeIn>
         <FadeIn delay={800} isActive={activeSection === 1}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
@@ -549,8 +591,8 @@ export default function App() {
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 80px 80px 120px', borderRight: `1px dashed ${tokens.colors.border}` }}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 40px 0', textTransform: 'uppercase' }}>02</p>
           <h2 style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, color: tokens.colors.white, margin: 0, lineHeight: 1.15, fontFamily: tokens.font, letterSpacing: '-0.02em', marginLeft: '-4px' }}>
-            <DecryptedText text={CONTENT.about.statement} speed={35} isActive={activeSection === 2} delay={100} /><br />
-            <span style={{ color: tokens.colors.mutedLight }}><DecryptedText text={CONTENT.about.statementLine2} speed={35} isActive={activeSection === 2} delay={400} /></span>
+            <DecryptedText text={CONTENT.about.statement} speed={35} useJobTitles={true} isActive={activeSection === 2} delay={100} /><br />
+            <span style={{ color: tokens.colors.mutedLight }}><DecryptedText text={CONTENT.about.statementLine2} speed={35} useJobTitles={true} isActive={activeSection === 2} delay={400} /></span>
           </h2>
           <div className="cursor-target" style={{ marginTop: '48px', width: '120px', height: '120px', borderRadius: '50%', backgroundColor: tokens.colors.darkAlt, border: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>FOTO</div>
         </div>
@@ -558,7 +600,7 @@ export default function App() {
           {CONTENT.about.stats.map((stat, i) => (
             <div key={i} className="cursor-target" style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
               <span style={{ fontSize: 'clamp(64px, 8vw, 100px)', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', lineHeight: 1 }}>
-                <DecryptedText text={stat.value} speed={80} sequential={false} maxIterations={12} characters="0123456789" isActive={activeSection === 2} delay={200 + i * 150} />
+                <DecryptedText text={stat.value} speed={80} sequential={false} maxIterations={12} isActive={activeSection === 2} delay={200 + i * 150} />
               </span>
               <span style={{ fontSize: '24px', color: tokens.colors.muted, fontFamily: tokens.font }}>{stat.unit}</span>
               <span style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em', marginLeft: '8px' }}>{stat.detail}</span>
@@ -592,7 +634,7 @@ export default function App() {
               display: 'block',
               marginLeft: '-4px',
             }}>
-              <DecryptedText text={word} speed={60} isActive={activeSection === 3} delay={i * 150} />
+              <DecryptedText text={word} speed={60} useJobTitles={true} isActive={activeSection === 3} delay={i * 150} />
             </span>
           ))}
         </div>
@@ -614,7 +656,7 @@ export default function App() {
         <div style={{ maxWidth: '900px', textAlign: 'center' }}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '0 0 64px 0', textTransform: 'uppercase' }}>04 — Track Record</p>
           <blockquote className="cursor-target" style={{ fontSize: 'clamp(28px, 5vw, 56px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em', lineHeight: 1.2, margin: 0 }}>
-            <DecryptedText text={`"${CONTENT.quote.text}"`} speed={40} isActive={activeSection === 4} />
+            <DecryptedText text={`"${CONTENT.quote.text}"`} speed={40} useJobTitles={true} isActive={activeSection === 4} />
           </blockquote>
           <p style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, marginTop: '48px', letterSpacing: '0.2em' }}>— {CONTENT.quote.author}</p>
         </div>
@@ -634,7 +676,7 @@ export default function App() {
       }}>
         <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase' }}>05 — Podcast</p>
         <h2 style={{ fontSize: 'clamp(48px, 8vw, 100px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', margin: '0 0 64px 0', lineHeight: 1, marginLeft: '-4px' }}>
-          <DecryptedText text={CONTENT.podcast.headline} speed={50} isActive={activeSection === 5} />
+          <DecryptedText text={CONTENT.podcast.headline} speed={50} useJobTitles={true} isActive={activeSection === 5} />
         </h2>
         <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap' }}>
           {CONTENT.podcast.topics.map((topic) => (
@@ -658,7 +700,7 @@ export default function App() {
       }}>
         <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>06</p>
         <h2 className="cursor-target" style={{ fontSize: 'clamp(64px, 12vw, 180px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.04em', margin: 0, lineHeight: 0.9, marginLeft: '-8px' }}>
-          <DecryptedText text={CONTENT.contact.headline} speed={80} isActive={activeSection === 6} />
+          <DecryptedText text={CONTENT.contact.headline} speed={80} useJobTitles={true} isActive={activeSection === 6} />
         </h2>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div style={{ display: 'flex', gap: '48px' }}>
