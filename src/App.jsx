@@ -596,6 +596,7 @@ export default function App() {
         <FadeIn delay={200} isActive={activeSection === 1}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>01</p>
         </FadeIn>
+        
         <FadeIn delay={400} isActive={activeSection === 1}>
           <h1 style={{ 
             fontSize: 'clamp(36px, 6vw, 72px)', 
@@ -608,27 +609,34 @@ export default function App() {
             <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
               Ich bin
             </span>{' '}
-            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
-              <DecryptedText text="Headhunter," speed={120} sequential={true} maxIterations={25} useJobTitles={true} isActive={activeSection === 1} delay={1200} />
+            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
+              Headhunter,
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
               spezialisiert auf
             </span>{' '}
-            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
-              <DecryptedText text="Tech & Engineering" speed={100} sequential={true} maxIterations={25} useJobTitles={true} isActive={activeSection === 1} delay={1800} />
+            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
+              Tech & Engineering
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
               in
             </span>{' '}
-            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
-              <DecryptedText text="München." speed={120} sequential={true} maxIterations={25} useJobTitles={true} isActive={activeSection === 1} delay={2600} />
+            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
+              München.
             </span>
           </h1>
         </FadeIn>
-        <FadeIn delay={600} isActive={activeSection === 1}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
+
+        <FadeIn delay={600} isActive={activeSection === 1}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p>
+            <ElectricBorder color="#0098d4" speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}>
+              <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: '#0098d4', border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase' }}>Kontakt</button>
+            </ElectricBorder>
+          </div>
+        </FadeIn>
       </section>
 
-      {/* ABOUT - Section 2 */}
       {/* ABOUT - Section 2 */}
       <section style={{ 
         backgroundColor: tokens.colors.dark, 
