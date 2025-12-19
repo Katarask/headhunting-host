@@ -11,7 +11,7 @@ const tokens = {
     dark: '#111111',
     darkAlt: '#1a1a1a',
     accent: '#0052FF',
-    muted: 'rgba(255, 255, 255, 0.4)',
+    muted: 'rgba(255, 255, 255, 0.6)',
     mutedLight: 'rgba(255, 255, 255, 0.6)',
     border: 'rgba(255, 255, 255, 0.08)',
   },
@@ -545,7 +545,7 @@ export default function App() {
       <TargetCursor targetSelector=".cursor-target, a, button" />
       <ExpandingNavbar activeSection={activeSection} onNavigate={navTo} />
 
-      <div style={{ position: 'relative' }}>
+      <main style={{ position: 'relative' }}>
         {/* HERO */}
         <section id="section-1" style={{ ...cardBase, backgroundColor: tokens.colors.black, zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '60px 80px', ...getCardStyle(0) }}>
           <FadeIn delay={200}>
@@ -650,7 +650,7 @@ export default function App() {
             <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: tokens.colors.white, color: tokens.colors.black, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button>
           </div>
         </section>
-      </div>
+      </main>
 
       <div style={{ height: '50vh', backgroundColor: tokens.colors.dark }} />
     </div>
