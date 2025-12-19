@@ -1,0 +1,38 @@
+      {/* EXPERTISE - Section 3 */}
+      <section style={{ 
+        ...cardBase, 
+        backgroundColor: tokens.colors.accent, 
+        borderRadius: '32px 32px 0 0',
+        zIndex: activeSection === 3 ? 10 : 1,
+        opacity: activeSection === 3 ? 1 : 0,
+        pointerEvents: activeSection === 3 ? 'auto' : 'none',
+        transition: 'opacity 0.5s ease',
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+      }}>
+        <Marquee items={CONTENT.marquee.items} />
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          padding: '60px 80px 60px 120px', 
+          flex: 1, 
+          justifyContent: 'center',
+        }}>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, margin: '0 0 48px 0', textTransform: 'uppercase' }}>03 — Was ich mache</p>
+          {CONTENT.expertise.words.map((word, i) => (
+            <span key={word} className="cursor-target" style={{ 
+              fontSize: 'clamp(48px, 10vw, 120px)', 
+              fontWeight: 400, 
+              color: `rgba(255, 255, 255, ${getExpertiseOpacity(i)})`, 
+              fontFamily: tokens.font, 
+              letterSpacing: '-0.03em', 
+              lineHeight: 1.0, 
+              display: 'block',
+              marginLeft: '-4px',
+            }}>
+              <DecryptedText text={word} speed={60} useJobTitles={true} isActive={activeSection === 3} delay={i * 150} />
+            </span>
+          ))}
+        </div>
+        <Marquee items={[...CONTENT.marquee.items].reverse()} />
+      </section>

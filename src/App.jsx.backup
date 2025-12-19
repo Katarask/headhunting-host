@@ -786,74 +786,38 @@ export default function App() {
             </ElectricBorder>
           </div>
         </FadeIn>
-      </section>      {/* ABOUT - Section 2: Cost of Vacancy */}
+      </section>
+
+      {/* ABOUT - Section 2 */}
       <section style={{ 
-        ...cardBase,
         backgroundColor: tokens.colors.dark, 
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 2 ? 10 : 1,
         opacity: activeSection === 2 ? 1 : 0,
         pointerEvents: activeSection === 2 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
-        display: 'grid', gridTemplateColumns: '1fr 400px', gap: '60px',
+        display: 'grid', gridTemplateColumns: '1fr 1fr',
       }}>
-        {/* Left - Pain Point Text */}
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 40px 60px 120px' }}>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase' }}>
-            <DecryptedText text="02 — Das Problem" speed={30} isActive={activeSection === 2} delay={0} />
-          </p>
-          
-          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: tokens.colors.white, margin: '0 0 28px 0', lineHeight: 1.2, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-            <DecryptedText text="Jede offene Stelle kostet " speed={25} isActive={activeSection === 2} delay={100} />
-            <span style={{ color: tokens.colors.accent }}><DecryptedText text="bares Geld." speed={25} isActive={activeSection === 2} delay={300} /></span>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 80px 80px 120px', borderRight: `1px dashed ${tokens.colors.border}` }}>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 40px 0', textTransform: 'uppercase' }}>02</p>
+          <h2 style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, color: tokens.colors.white, margin: 0, lineHeight: 1.15, fontFamily: tokens.font, letterSpacing: '-0.02em', marginLeft: '-4px' }}>
+            <DecryptedText text={CONTENT.about.statement} speed={35} useJobTitles={true} isActive={activeSection === 2} delay={100} /><br />
+            <span style={{ color: tokens.colors.mutedLight }}><DecryptedText text={CONTENT.about.statementLine2} speed={35} useJobTitles={true} isActive={activeSection === 2} delay={400} /></span>
           </h2>
-          
-          <p style={{ fontSize: '15px', color: tokens.colors.mutedLight, lineHeight: 1.7, margin: '0 0 20px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
-            <DecryptedText text="Während Sie nach dem perfekten Kandidaten suchen, verlieren Sie täglich Produktivität. Ihr Team arbeitet über Kapazität, Projekte verzögern sich, und die besten Talente gehen zur Konkurrenz." speed={8} isActive={activeSection === 2} delay={500} />
-          </p>
-          
-          <p style={{ fontSize: '15px', color: tokens.colors.muted, lineHeight: 1.7, margin: '0 0 36px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
-            <DecryptedText text="Die durchschnittliche Tech-Position bleibt 42 Tage unbesetzt. Bei Senior-Rollen oft 3-6 Monate. Rechnen Sie selbst." speed={10} isActive={activeSection === 2} delay={800} />
-          </p>
-
-          {/* Quick Stats Row */}
-          <div style={{ display: 'flex', gap: '40px', paddingTop: '20px', borderTop: `1px solid ${tokens.colors.border}` }}>
-            <div>
-              <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-                <DecryptedText text="42" speed={60} isActive={activeSection === 2} delay={1100} />
-              </span>
-              <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
-                <DecryptedText text="Tage ⌀ unbesetzt" speed={20} isActive={activeSection === 2} delay={1200} />
-              </p>
-            </div>
-            <div>
-              <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-                <DecryptedText text="1.5x" speed={60} isActive={activeSection === 2} delay={1300} />
-              </span>
-              <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
-                <DecryptedText text="Gehalt = Verlust" speed={20} isActive={activeSection === 2} delay={1400} />
-              </p>
-            </div>
-            <div>
-              <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-                <DecryptedText text="73%" speed={60} isActive={activeSection === 2} delay={1500} />
-              </span>
-              <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
-                <DecryptedText text="versteckte Kosten" speed={20} isActive={activeSection === 2} delay={1600} />
-              </p>
-            </div>
-          </div>
+          <div className="cursor-target" style={{ marginTop: '48px', width: '120px', height: '120px', borderRadius: '50%', backgroundColor: tokens.colors.darkAlt, border: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>FOTO</div>
         </div>
-        
-        {/* Right - Calculator */}
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 80px 60px 0' }}>
-          <CostOfVacancyCalculator />
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px', gap: '48px' }}>
+          {CONTENT.about.stats.map((stat, i) => (
+            <div key={i} className="cursor-target" style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+              <span style={{ fontSize: 'clamp(64px, 8vw, 100px)', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', lineHeight: 1 }}>
+                <DecryptedText text={stat.value} speed={80} sequential={false} maxIterations={12} isActive={activeSection === 2} delay={200 + i * 150} />
+              </span>
+              <span style={{ fontSize: '24px', color: tokens.colors.muted, fontFamily: tokens.font }}>{stat.unit}</span>
+              <span style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em', marginLeft: '8px' }}>{stat.detail}</span>
+            </div>
+          ))}
         </div>
       </section>
-
-
-
-
 
       {/* EXPERTISE - Section 3 */}
       <section style={{ 
@@ -868,32 +832,39 @@ export default function App() {
       }}>
         <Marquee items={CONTENT.marquee.items} />
         <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column',
-          alignItems: 'flex-start',
+          display: 'grid', 
+          gridTemplateColumns: '1fr 400px', 
+          gap: '60px',
           padding: '60px 80px 60px 120px', 
           flex: 1, 
-          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, margin: '0 0 48px 0', textTransform: 'uppercase' }}>03 — Was ich mache</p>
-          {CONTENT.expertise.words.map((word, i) => (
-            <span key={word} className="cursor-target" style={{ 
-              fontSize: 'clamp(48px, 10vw, 120px)', 
-              fontWeight: 400, 
-              color: `rgba(255, 255, 255, ${getExpertiseOpacity(i)})`, 
-              fontFamily: tokens.font, 
-              letterSpacing: '-0.03em', 
-              lineHeight: 1.0, 
-              display: 'block',
-              marginLeft: '-4px',
-            }}>
-              <DecryptedText text={word} speed={60} useJobTitles={true} isActive={activeSection === 3} delay={i * 150} />
-            </span>
-          ))}
+          {/* Left - Expertise Words */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, margin: '0 0 48px 0', textTransform: 'uppercase' }}>03 — Was ich mache</p>
+            {CONTENT.expertise.words.map((word, i) => (
+              <span key={word} className="cursor-target" style={{ 
+                fontSize: 'clamp(48px, 8vw, 100px)', 
+                fontWeight: 400, 
+                color: `rgba(255, 255, 255, ${getExpertiseOpacity(i)})`, 
+                fontFamily: tokens.font, 
+                letterSpacing: '-0.03em', 
+                lineHeight: 1.0, 
+                display: 'block',
+                marginLeft: '-4px',
+              }}>
+                <DecryptedText text={word} speed={60} useJobTitles={true} isActive={activeSection === 3} delay={i * 150} />
+              </span>
+            ))}
+          </div>
+          
+          {/* Right - Calculator */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <CostOfVacancyCalculator />
+          </div>
         </div>
         <Marquee items={[...CONTENT.marquee.items].reverse()} />
       </section>
-
 
       {/* BLOG - Section 4 */}
       <section style={{ 
