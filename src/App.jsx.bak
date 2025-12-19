@@ -71,62 +71,9 @@ const CONTENT = {
   marquee: {
     items: ['Tech Recruiting', 'Engineering', 'Aerospace', 'Defense', 'IT', 'Automatisierung', 'Headhunting', 'München'],
   },
-  blog: {
-    posts: [
-      {
-        id: 1,
-        title: 'Warum 90% der Tech-Recruiter scheitern',
-        category: 'Recruiting',
-        date: '15. Dez 2024',
-        readTime: '5 min',
-        preview: \`Die meisten Recruiter behandeln Kandidaten wie Nummern. Sie kopieren LinkedIn-Nachrichten, spammen Postfächer voll und wundern sich über 2% Response-Raten.
-
-Hier ist was ich anders mache und warum meine Antwortrate bei über 40% liegt.
-
-Das Problem beginnt schon bei der ersten Nachricht. "Hallo [Name], ich habe Ihr Profil gesehen und denke, Sie wären perfekt für eine spannende Position bei einem unserer Kunden." – So oder so ähnlich klingen 99% aller Recruiter-Nachrichten.
-
-Kein Wunder, dass niemand antwortet.
-
-Was funktioniert stattdessen? Personalisierung, die wirklich persönlich ist. Nicht "Ich habe gesehen, dass Sie bei [Firma] arbeiten", sondern echte Recherche.\`,
-      },
-      {
-        id: 2,
-        title: 'Der perfekte Tech-Stack für Recruiting Automation',
-        category: 'Automatisierung',
-        date: '10. Dez 2024',
-        readTime: '8 min',
-        preview: \`Make.com, Apify, Hunter.io – wie ich meinen Workflow automatisiert habe und jetzt 3x so viele Kandidaten erreiche mit der Hälfte der Zeit.
-
-Ein kompletter Walkthrough durch mein Setup.
-
-Schritt 1: Lead Generation
-Ich nutze Apify um LinkedIn Profile zu scrapen. Nicht random, sondern gezielt nach bestimmten Kriterien: Technologie-Stack, Erfahrungslevel, Location.
-
-Schritt 2: Email Finding
-Hunter.io findet die Business-Emails. Die Trefferquote liegt bei etwa 70% – gut genug für Scale.
-
-Schritt 3: Sequenzen
-Lemlist für die Outreach-Sequenzen. Personalisierte erste Nachricht, dann 2-3 Follow-ups mit Mehrwert.\`,
-      },
-      {
-        id: 3,
-        title: 'Aerospace & Defense: Der unterschätzte Markt',
-        category: 'Markt',
-        date: '5. Dez 2024',
-        readTime: '6 min',
-        preview: \`Während alle auf AI-Startups schauen, explodiert der Aerospace-Sektor in München. Hier ist warum das die beste Nische für Tech-Recruiter ist.
-
-München ist nicht nur BMW und Siemens. Die Stadt ist einer der wichtigsten Aerospace-Hubs in Europa. Airbus, MTU, IABG, OHB – und dutzende Zulieferer.
-
-Was diese Branche besonders macht:
-
-1. Stabilität – Aerospace-Projekte laufen über Jahre. Keine Startup-Unsicherheit.
-
-2. Gehälter – Top-Ingenieure verdienen hier 80-120k.
-
-3. Wenig Konkurrenz – Die meisten Recruiter fokussieren sich auf "sexy" Branchen.\`,
-      },
-    ],
+  quote: {
+    text: '3 Wochen. 1 Engineering Lead. Perfekt.',
+    author: 'CTO, Aerospace Startup',
   },
   podcast: {
     headline: 'Lade mich ein.',
@@ -601,8 +548,6 @@ const FadeIn = ({ children, delay = 0, isActive = true }) => {
 // ============================================
 export default function App() {
   const [activeSection, setActiveSection] = useState(1);
-  const [selectedBlogPost, setSelectedBlogPost] = useState(CONTENT.blog.posts[0]);
-  const [hoveredBlogId, setHoveredBlogId] = useState(null);
 
   // Disable scroll - only navbar navigation
   useEffect(() => {
@@ -755,7 +700,7 @@ export default function App() {
         <Marquee items={[...CONTENT.marquee.items].reverse()} />
       </section>
 
-      {/* BLOG - Section 4 */}
+      {/* QUOTE - Section 4 */}
       <section style={{ 
         ...cardBase, 
         backgroundColor: tokens.colors.darkAlt, 
@@ -764,78 +709,15 @@ export default function App() {
         opacity: activeSection === 4 ? 1 : 0,
         pointerEvents: activeSection === 4 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
-        display: 'grid', 
-        gridTemplateColumns: '1fr 1fr',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', 
+        ...sectionPadding,
       }}>
-        {/* Left - Article List */}
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          justifyContent: 'center', 
-          padding: '80px 80px 80px 120px',
-          borderRight: `1px dashed ${tokens.colors.border}`,
-        }}>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 48px 0', textTransform: 'uppercase' }}>04 — Blog</p>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-            {CONTENT.blog.posts.map((post, index) => (
-              <div 
-                key={post.id}
-                className="cursor-target"
-                onClick={() => setSelectedBlogPost(post)}
-                onMouseEnter={() => setHoveredBlogId(post.id)}
-                onMouseLeave={() => setHoveredBlogId(null)}
-                style={{ 
-                  cursor: 'pointer',
-                  opacity: selectedBlogPost.id === post.id ? 1 : (hoveredBlogId === post.id ? 0.7 : 0.4),
-                  transform: selectedBlogPost.id === post.id ? 'translateX(8px)' : 'translateX(0)',
-                  transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
-                  <span style={{ fontSize: '12px', color: selectedBlogPost.id === post.id ? tokens.colors.accent : tokens.colors.muted, fontFamily: tokens.fontMono, transition: 'color 0.3s ease', marginTop: '4px' }}>0{index + 1}</span>
-                  <div>
-                    <span style={{ fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, display: 'block', marginBottom: '8px', letterSpacing: '0.1em' }}>{post.category.toUpperCase()} · {post.readTime}</span>
-                    <h3 style={{ fontSize: '18px', fontWeight: selectedBlogPost.id === post.id ? 500 : 400, color: selectedBlogPost.id === post.id ? tokens.colors.white : tokens.colors.mutedLight, margin: 0, transition: 'all 0.3s ease', lineHeight: 1.35 }}>{post.title}</h3>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* More Articles Hint */}
-          <div className="cursor-target" style={{ marginTop: '48px', paddingTop: '24px', borderTop: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', opacity: 0.5, transition: 'opacity 0.3s ease' }}>
-            <span style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono, letterSpacing: '0.05em' }}>Alle Artikel ansehen</span>
-            <span style={{ fontSize: '16px', color: tokens.colors.accent }}>→</span>
-          </div>
-        </div>
-
-        {/* Right - Scrollable Preview */}
-        <div style={{ overflowY: 'auto', padding: '80px' }} className="blog-scroll">
-          <style>{\`
-            .blog-scroll::-webkit-scrollbar { width: 4px; }
-            .blog-scroll::-webkit-scrollbar-track { background: transparent; }
-            .blog-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
-            .blog-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
-          \`}</style>
-          
-          {/* Sticky Header */}
-          <div style={{ position: 'sticky', top: 0, backgroundColor: tokens.colors.darkAlt, paddingBottom: '20px', marginBottom: '8px', zIndex: 10 }}>
-            <span style={{ fontSize: '11px', color: tokens.colors.accent, fontFamily: tokens.fontMono, letterSpacing: '0.2em' }}>{selectedBlogPost.readTime.toUpperCase()} LESEZEIT</span>
-            <h2 style={{ fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 400, color: tokens.colors.white, margin: '16px 0 0 0', lineHeight: 1.2, letterSpacing: '-0.02em' }}>{selectedBlogPost.title}</h2>
-          </div>
-          
-          {/* Preview Text */}
-          <div style={{ fontSize: '16px', color: tokens.colors.mutedLight, lineHeight: 1.8, whiteSpace: 'pre-line' }}>{selectedBlogPost.preview}</div>
-          
-          {/* Footer */}
-          <div style={{ marginTop: '48px', paddingTop: '24px', borderTop: `1px dashed ${tokens.colors.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, letterSpacing: '0.1em' }}>{selectedBlogPost.date}</p>
-            <div className="cursor-target" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-              <span style={{ fontSize: '13px', color: tokens.colors.accent, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>WEITERLESEN</span>
-              <span style={{ fontSize: '18px', color: tokens.colors.accent }}>→</span>
-            </div>
-          </div>
+        <div style={{ maxWidth: '900px', textAlign: 'center' }}>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '0 0 64px 0', textTransform: 'uppercase' }}>04 — Track Record</p>
+          <blockquote className="cursor-target" style={{ fontSize: 'clamp(28px, 5vw, 56px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em', lineHeight: 1.2, margin: 0 }}>
+            <DecryptedText text={`"${CONTENT.quote.text}"`} speed={40} useJobTitles={true} isActive={activeSection === 4} />
+          </blockquote>
+          <p style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, marginTop: '48px', letterSpacing: '0.2em' }}>— {CONTENT.quote.author}</p>
         </div>
       </section>
 
