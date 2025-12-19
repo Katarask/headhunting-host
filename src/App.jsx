@@ -564,14 +564,35 @@ export default function App() {
         ...sectionPadding 
       }}>
         <FadeIn delay={200} isActive={activeSection === 1}>
-          <div style={{ alignSelf: 'flex-end', textAlign: 'right' }}>
-            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>{CONTENT.hero.role}</p>
-            <p style={{ fontSize: '11px', letterSpacing: '0.2em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '8px 0 0 0' }}>{CONTENT.hero.location}</p>
-          </div>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>01</p>
         </FadeIn>
         <FadeIn delay={500} isActive={activeSection === 1}>
-          <h1 className="cursor-target" style={{ fontSize: 'clamp(120px, 20vw, 280px)', fontWeight: 400, letterSpacing: '-0.05em', color: tokens.colors.white, margin: 0, lineHeight: 0.85, fontFamily: tokens.font, marginLeft: '-8px' }}>
-            <DecryptedText text={CONTENT.hero.name} speed={100} sequential={false} maxIterations={8} useJobTitles={true} isActive={activeSection === 1} />
+          <h1 className="cursor-target" style={{ 
+            fontSize: 'clamp(36px, 6vw, 72px)', 
+            fontWeight: 400, 
+            lineHeight: 1.1, 
+            margin: 0, 
+            fontFamily: tokens.font,
+            maxWidth: '1100px',
+          }}>
+            <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
+              Ich bin
+            </span>{' '}
+            <span style={{ color: tokens.colors.white, fontWeight: 600 }}>
+              Headhunter,
+            </span>{' '}
+            <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
+              spezialisiert auf
+            </span>{' '}
+            <span style={{ color: tokens.colors.white, fontWeight: 600 }}>
+              Tech & Engineering
+            </span>{' '}
+            <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
+              in
+            </span>{' '}
+            <span style={{ color: tokens.colors.white, fontWeight: 600 }}>
+              München.
+            </span>
           </h1>
         </FadeIn>
         <FadeIn delay={800} isActive={activeSection === 1}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
