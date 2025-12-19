@@ -559,14 +559,14 @@ export default function App() {
         zIndex: activeSection === 1 ? 10 : 1,
         opacity: activeSection === 1 ? 1 : 0,
         pointerEvents: activeSection === 1 ? 'auto' : 'none',
-        transition: 'opacity 0.5s ease',
+        transition: 'opacity 0.8s ease',
         display: 'flex', flexDirection: 'column', justifyContent: 'space-between', 
         ...sectionPadding 
       }}>
         <FadeIn delay={200} isActive={activeSection === 1}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>01</p>
         </FadeIn>
-        <FadeIn delay={500} isActive={activeSection === 1}>
+        <FadeIn delay={400} isActive={activeSection === 1}>
           <h1 style={{ 
             fontSize: 'clamp(36px, 6vw, 72px)', 
             fontWeight: 400, 
@@ -579,23 +579,23 @@ export default function App() {
               Ich bin
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
-              <DecryptedText text="Headhunter," speed={80} sequential={false} maxIterations={10} useJobTitles={true} isActive={activeSection === 1} delay={200} />
+              <DecryptedText text="Headhunter," speed={120} sequential={true} maxIterations={25} useJobTitles={true} isActive={activeSection === 1} delay={1200} />
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
               spezialisiert auf
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
-              <DecryptedText text="Tech & Engineering" speed={60} sequential={false} maxIterations={12} useJobTitles={true} isActive={activeSection === 1} delay={400} />
+              <DecryptedText text="Tech & Engineering" speed={100} sequential={true} maxIterations={25} useJobTitles={true} isActive={activeSection === 1} delay={1800} />
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
               in
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
-              <DecryptedText text="München." speed={80} sequential={false} maxIterations={8} useJobTitles={true} isActive={activeSection === 1} delay={600} />
+              <DecryptedText text="München." speed={120} sequential={true} maxIterations={25} useJobTitles={true} isActive={activeSection === 1} delay={2600} />
             </span>
           </h1>
         </FadeIn>
-        <FadeIn delay={800} isActive={activeSection === 1}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
+        <FadeIn delay={600} isActive={activeSection === 1}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
       </section>
 
       {/* ABOUT - Section 2 */}
