@@ -62,8 +62,8 @@ const CONTENT = {
   },
   contact: {
     headline: 'Sprechen?',
-    email: 'deniz@tekom.de',
-    linkedin: 'linkedin.com/in/deniz',
+    email: 'd.l.tulay@tekom-gmbh.de',
+    linkedin: 'www.linkedin.com/in/deniz-levent-tulay-tekom2025',
   },
 };
 
@@ -320,21 +320,6 @@ const GrainOverlay = () => (
 );
 
 // ============================================
-// SCROLL PROGRESS BAR
-// ============================================
-const ScrollProgress = ({ progress }) => (
-  <div style={{
-    position: 'fixed', top: 0, left: 0, width: '100%', height: '2px',
-    zIndex: 10000, backgroundColor: 'rgba(255,255,255,0.1)',
-  }}>
-    <div style={{
-      height: '100%', width: `${progress}%`, backgroundColor: tokens.colors.accent,
-      transition: `width 100ms ${tokens.easing.hover}`,
-    }} />
-  </div>
-);
-
-// ============================================
 // LINE DRAW LINK
 // ============================================
 const LineDrawLink = ({ href, children, style, className = '' }) => {
@@ -364,8 +349,8 @@ const LineDrawLink = ({ href, children, style, className = '' }) => {
 const Marquee = ({ items }) => (
   <div style={{
     overflow: 'hidden', whiteSpace: 'nowrap',
-    borderTop: `1px solid ${tokens.colors.border}`,
-    borderBottom: `1px solid ${tokens.colors.border}`, padding: '24px 0',
+    borderTop: `1px dashed ${tokens.colors.border}`,
+    borderBottom: `1px dashed ${tokens.colors.border}`, padding: '24px 0',
   }}>
     <div style={{ display: 'inline-block', animation: 'marquee 20s linear infinite' }}>
       {[...items, ...items].map((item, i) => (
@@ -450,21 +435,20 @@ const ParallaxText = ({ children, speed = 0.5, style }) => {
 };
 
 // ============================================
-// EXPANDING PILL NAVBAR
+// FIXED NAVBAR (no expand on hover)
 // ============================================
-const ExpandingNavbar = ({ activeSection, onNavigate }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const FixedNavbar = ({ activeSection, onNavigate }) => {
   return (
-    <nav className="cursor-target" onMouseEnter={() => setIsExpanded(true)} onMouseLeave={() => setIsExpanded(false)}
+    <nav className="cursor-target"
       style={{
         position: 'fixed', left: '32px', bottom: '32px', zIndex: 10000,
         display: 'flex', flexDirection: 'column', gap: '4px', padding: '8px', borderRadius: '24px',
         backgroundColor: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.08)', transition: `all ${tokens.timing.medium} ${tokens.easing.page}`,
+        border: '1px solid rgba(255, 255, 255, 0.08)',
       }}>
       {[1, 2, 3, 4, 5, 6].map((num) => (
         <button key={num} onClick={() => onNavigate(num)} className="cursor-target" style={{
-          width: isExpanded ? '48px' : '36px', height: '36px', borderRadius: '18px', border: 'none', cursor: 'none',
+          width: '36px', height: '36px', borderRadius: '18px', border: 'none', cursor: 'none',
           backgroundColor: activeSection === num ? tokens.colors.white : 'transparent',
           color: activeSection === num ? tokens.colors.black : tokens.colors.muted,
           fontSize: '11px', fontWeight: 500, fontFamily: tokens.fontMono,
@@ -495,164 +479,193 @@ const FadeIn = ({ children, delay = 0, style }) => {
 // ============================================
 export default function App() {
   const [activeSection, setActiveSection] = useState(1);
-  const [scrollY, setScrollY] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const sections = [1, 2, 3, 4, 5, 6];
-  const tickingRef = useRef(false);
-  const sectionRefs = useRef({});
 
-  useEffect(() => { sections.forEach(id => { sectionRefs.current[id] = document.getElementById(`section-${id}`); }); }, []);
-
-  const updateScroll = useCallback(() => {
-    setScrollY(window.scrollY);
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    setScrollProgress((window.scrollY / docHeight) * 100);
-    const pos = window.scrollY + window.innerHeight / 2;
-    for (let i = sections.length - 1; i >= 0; i--) {
-      const el = sectionRefs.current[sections[i]];
-      if (el && el.offsetTop <= pos) { setActiveSection(sections[i]); break; }
-    }
+  // Disable scroll - only navbar navigation
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
   }, []);
 
-  useEffect(() => {
-    const onScroll = () => {
-      if (!tickingRef.current) {
-        requestAnimationFrame(() => { updateScroll(); tickingRef.current = false; });
-        tickingRef.current = true;
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [updateScroll]);
+  const navTo = (id) => {
+    setActiveSection(id);
+  };
 
-  const navTo = (id) => { document.getElementById(`section-${id}`)?.scrollIntoView({ behavior: 'smooth' }); };
-
-  const getCardStyle = (index) => {
-    const h = typeof window !== 'undefined' ? window.innerHeight : 800;
-    const progress = (scrollY - index * h) / h;
-    return progress > 0.1 ? { transform: `scale(${Math.max(0.96, 1 - progress * 0.04)})` } : { transform: 'scale(1)' };
+  // Expertise words with fading opacity (white to muted)
+  const getExpertiseOpacity = (index) => {
+    const opacities = [1, 0.7, 0.5, 0.3];
+    return opacities[index] || 0.3;
   };
 
   const cardBase = {
-    position: 'sticky', top: 0, height: '100vh', width: '100vw',
-    transformOrigin: 'center top', transition: `transform ${tokens.timing.medium} ${tokens.easing.page}`, overflow: 'hidden',
+    position: 'absolute', top: 0, left: 0, height: '100vh', width: '100vw', overflow: 'hidden',
   };
 
+  // Shared padding with extra left space for navbar
+  const sectionPadding = { padding: '60px 80px 60px 120px' };
+
   return (
-    <div style={{ backgroundColor: tokens.colors.black, scrollBehavior: 'smooth', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: tokens.colors.black, height: '100vh', overflow: 'hidden', position: 'relative' }}>
       <GrainOverlay />
-      <ScrollProgress progress={scrollProgress} />
       <TargetCursor targetSelector=".cursor-target, a, button" />
-      <ExpandingNavbar activeSection={activeSection} onNavigate={navTo} />
+      <FixedNavbar activeSection={activeSection} onNavigate={navTo} />
 
-      <main style={{ position: 'relative' }}>
-        {/* HERO */}
-        <section id="section-1" style={{ ...cardBase, backgroundColor: tokens.colors.black, zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '60px 80px', ...getCardStyle(0) }}>
-          <FadeIn delay={200}>
-            <div style={{ alignSelf: 'flex-end', textAlign: 'right' }}>
-              <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>{CONTENT.hero.role}</p>
-              <p style={{ fontSize: '11px', letterSpacing: '0.2em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '8px 0 0 0' }}>{CONTENT.hero.location}</p>
+      {/* HERO - Section 1 */}
+      <section style={{ 
+        ...cardBase, 
+        backgroundColor: tokens.colors.black, 
+        zIndex: activeSection === 1 ? 10 : 1,
+        opacity: activeSection === 1 ? 1 : 0,
+        transition: 'opacity 0.5s ease',
+        display: 'flex', flexDirection: 'column', justifyContent: 'space-between', 
+        ...sectionPadding 
+      }}>
+        <FadeIn delay={200}>
+          <div style={{ alignSelf: 'flex-end', textAlign: 'right' }}>
+            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>{CONTENT.hero.role}</p>
+            <p style={{ fontSize: '11px', letterSpacing: '0.2em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '8px 0 0 0' }}>{CONTENT.hero.location}</p>
+          </div>
+        </FadeIn>
+        <FadeIn delay={500}>
+          <h1 className="cursor-target" style={{ fontSize: 'clamp(120px, 20vw, 280px)', fontWeight: 400, letterSpacing: '-0.05em', color: tokens.colors.white, margin: 0, lineHeight: 0.85, fontFamily: tokens.font, marginLeft: '-8px' }}>
+            <DecryptedText text={CONTENT.hero.name} speed={100} sequential={false} maxIterations={8} animateOn="view" />
+          </h1>
+        </FadeIn>
+        <FadeIn delay={800}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
+      </section>
+
+      {/* ABOUT - Section 2 */}
+      <section style={{ 
+        ...cardBase, 
+        backgroundColor: tokens.colors.dark, 
+        borderRadius: '32px 32px 0 0',
+        zIndex: activeSection === 2 ? 10 : 1,
+        opacity: activeSection === 2 ? 1 : 0,
+        transition: 'opacity 0.5s ease',
+        display: 'grid', gridTemplateColumns: '1fr 1fr',
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 80px 80px 120px', borderRight: `1px dashed ${tokens.colors.border}` }}>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 40px 0', textTransform: 'uppercase' }}>02</p>
+          <h2 style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, color: tokens.colors.white, margin: 0, lineHeight: 1.15, fontFamily: tokens.font, letterSpacing: '-0.02em', marginLeft: '-4px' }}>
+            <DecryptedText text={CONTENT.about.statement} speed={35} animateOn="view" delay={100} /><br />
+            <span style={{ color: tokens.colors.mutedLight }}><DecryptedText text={CONTENT.about.statementLine2} speed={35} animateOn="view" delay={400} /></span>
+          </h2>
+          <div className="cursor-target" style={{ marginTop: '48px', width: '120px', height: '120px', borderRadius: '50%', backgroundColor: tokens.colors.darkAlt, border: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>FOTO</div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px', gap: '48px' }}>
+          {CONTENT.about.stats.map((stat, i) => (
+            <div key={i} className="cursor-target" style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+              <span style={{ fontSize: 'clamp(64px, 8vw, 100px)', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', lineHeight: 1 }}>
+                <DecryptedText text={stat.value} speed={80} sequential={false} maxIterations={12} characters="0123456789" animateOn="view" delay={200 + i * 150} />
+              </span>
+              <span style={{ fontSize: '24px', color: tokens.colors.muted, fontFamily: tokens.font }}>{stat.unit}</span>
+              <span style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em', marginLeft: '8px' }}>{stat.detail}</span>
             </div>
-          </FadeIn>
-          <FadeIn delay={500}>
-            <ParallaxText speed={0.3}>
-              <h1 className="cursor-target" style={{ fontSize: 'clamp(120px, 20vw, 280px)', fontWeight: 400, letterSpacing: '-0.05em', color: tokens.colors.white, margin: 0, lineHeight: 0.85, fontFamily: tokens.font }}>
-                <DecryptedText text={CONTENT.hero.name} speed={100} sequential={false} maxIterations={8} animateOn="view" />
-              </h1>
-            </ParallaxText>
-          </FadeIn>
-          <FadeIn delay={800}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
-        </section>
+          ))}
+        </div>
+      </section>
 
-        {/* ABOUT */}
-        <section id="section-2" style={{ ...cardBase, backgroundColor: tokens.colors.dark, borderRadius: '32px 32px 0 0', zIndex: 2, display: 'grid', gridTemplateColumns: '1fr 1fr', ...getCardStyle(1) }}>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px', borderRight: `1px solid ${tokens.colors.border}` }}>
-            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 40px 0', textTransform: 'uppercase' }}>02</p>
-            <ParallaxText speed={0.2}>
-              <h2 style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, color: tokens.colors.white, margin: 0, lineHeight: 1.15, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-                <DecryptedText text={CONTENT.about.statement} speed={35} animateOn="view" delay={100} /><br />
-                <span style={{ color: tokens.colors.mutedLight }}><DecryptedText text={CONTENT.about.statementLine2} speed={35} animateOn="view" delay={400} /></span>
-              </h2>
-            </ParallaxText>
-            <div className="cursor-target" style={{ marginTop: '48px', width: '120px', height: '120px', borderRadius: '50%', backgroundColor: tokens.colors.darkAlt, border: `1px solid ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>FOTO</div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px', gap: '48px' }}>
-            {CONTENT.about.stats.map((stat, i) => (
-              <div key={i} className="cursor-target" style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
-                <span style={{ fontSize: 'clamp(64px, 8vw, 100px)', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', lineHeight: 1 }}>
-                  <DecryptedText text={stat.value} speed={80} sequential={false} maxIterations={12} characters="0123456789" animateOn="view" delay={200 + i * 150} />
-                </span>
-                <span style={{ fontSize: '24px', color: tokens.colors.muted, fontFamily: tokens.font }}>{stat.unit}</span>
-                <span style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em', marginLeft: '8px' }}>{stat.detail}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+      {/* EXPERTISE - Section 3 */}
+      <section style={{ 
+        ...cardBase, 
+        backgroundColor: tokens.colors.accent, 
+        borderRadius: '32px 32px 0 0',
+        zIndex: activeSection === 3 ? 10 : 1,
+        opacity: activeSection === 3 ? 1 : 0,
+        transition: 'opacity 0.5s ease',
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+      }}>
+        <Marquee items={CONTENT.marquee.items} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '80px 80px 80px 120px', flex: 1, justifyContent: 'center' }}>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, margin: '0 0 48px 0', textTransform: 'uppercase' }}>03 — Was ich mache</p>
+          {CONTENT.expertise.words.map((word, i) => (
+            <span key={word} className="cursor-target" style={{ 
+              fontSize: 'clamp(48px, 10vw, 120px)', 
+              fontWeight: 400, 
+              color: `rgba(255, 255, 255, ${getExpertiseOpacity(i)})`, 
+              fontFamily: tokens.font, 
+              letterSpacing: '-0.03em', 
+              lineHeight: 1.0, 
+              display: 'block',
+              marginLeft: '-4px',
+            }}>
+              <DecryptedText text={word} speed={60} animateOn="view" delay={i * 150} />
+            </span>
+          ))}
+        </div>
+        <Marquee items={[...CONTENT.marquee.items].reverse()} />
+      </section>
 
-        {/* EXPERTISE */}
-        <section id="section-3" style={{ ...cardBase, backgroundColor: tokens.colors.accent, borderRadius: '32px 32px 0 0', zIndex: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center', ...getCardStyle(2) }}>
-          <Marquee items={CONTENT.marquee.items} />
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '80px', flex: 1, justifyContent: 'center' }}>
-            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, margin: '0 0 48px 4px', textTransform: 'uppercase' }}>03 — Was ich mache</p>
-            {CONTENT.expertise.words.map((word, i) => (
-              <ParallaxText key={word} speed={0.1 * (i + 1)}>
-                <span className="cursor-target" style={{ fontSize: 'clamp(48px, 10vw, 120px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', lineHeight: 1.0, display: 'block' }}>
-                  <DecryptedText text={word} speed={60} animateOn="view" delay={i * 150} />
-                </span>
-              </ParallaxText>
-            ))}
-          </div>
-          <Marquee items={[...CONTENT.marquee.items].reverse()} />
-        </section>
+      {/* QUOTE - Section 4 */}
+      <section style={{ 
+        ...cardBase, 
+        backgroundColor: tokens.colors.darkAlt, 
+        borderRadius: '32px 32px 0 0',
+        zIndex: activeSection === 4 ? 10 : 1,
+        opacity: activeSection === 4 ? 1 : 0,
+        transition: 'opacity 0.5s ease',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', 
+        ...sectionPadding,
+      }}>
+        <div style={{ maxWidth: '900px', textAlign: 'center' }}>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '0 0 64px 0', textTransform: 'uppercase' }}>04 — Track Record</p>
+          <blockquote className="cursor-target" style={{ fontSize: 'clamp(28px, 5vw, 56px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em', lineHeight: 1.2, margin: 0 }}>
+            <DecryptedText text={`"${CONTENT.quote.text}"`} speed={40} animateOn="view" />
+          </blockquote>
+          <p style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, marginTop: '48px', letterSpacing: '0.2em' }}>— {CONTENT.quote.author}</p>
+        </div>
+      </section>
 
-        {/* QUOTE */}
-        <section id="section-4" style={{ ...cardBase, backgroundColor: tokens.colors.darkAlt, borderRadius: '32px 32px 0 0', zIndex: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px', ...getCardStyle(3) }}>
-          <div style={{ maxWidth: '900px', textAlign: 'center' }}>
-            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '0 0 64px 0', textTransform: 'uppercase' }}>04 — Track Record</p>
-            <ParallaxText speed={0.2}>
-              <blockquote className="cursor-target" style={{ fontSize: 'clamp(28px, 5vw, 56px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em', lineHeight: 1.2, margin: 0 }}>
-                <DecryptedText text={`"${CONTENT.quote.text}"`} speed={40} animateOn="view" />
-              </blockquote>
-            </ParallaxText>
-            <p style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, marginTop: '48px', letterSpacing: '0.2em' }}>— {CONTENT.quote.author}</p>
-          </div>
-        </section>
+      {/* PODCAST - Section 5 */}
+      <section style={{ 
+        ...cardBase, 
+        backgroundColor: tokens.colors.black, 
+        borderRadius: '32px 32px 0 0',
+        zIndex: activeSection === 5 ? 10 : 1,
+        opacity: activeSection === 5 ? 1 : 0,
+        transition: 'opacity 0.5s ease',
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', 
+        ...sectionPadding,
+      }}>
+        <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase' }}>05 — Podcast</p>
+        <h2 style={{ fontSize: 'clamp(48px, 8vw, 100px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', margin: '0 0 64px 0', lineHeight: 1, marginLeft: '-4px' }}>
+          <DecryptedText text={CONTENT.podcast.headline} speed={50} animateOn="view" />
+        </h2>
+        <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap' }}>
+          {CONTENT.podcast.topics.map((topic) => (
+            <LineDrawLink key={topic} href="#" className="cursor-target" style={{ fontSize: '14px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono, padding: '12px 0' }}>{topic}</LineDrawLink>
+          ))}
+        </div>
+        <div className="cursor-target" style={{ marginTop: '80px', width: '100%', maxWidth: '400px', aspectRatio: '16/9', backgroundColor: tokens.colors.dark, borderRadius: '12px', border: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>VIDEO LOOP</div>
+      </section>
 
-        {/* PODCAST */}
-        <section id="section-5" style={{ ...cardBase, backgroundColor: tokens.colors.black, borderRadius: '32px 32px 0 0', zIndex: 5, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px', ...getCardStyle(4) }}>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase' }}>05 — Podcast</p>
-          <ParallaxText speed={0.3}>
-            <h2 style={{ fontSize: 'clamp(48px, 8vw, 100px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', margin: '0 0 64px 0', lineHeight: 1 }}>
-              <DecryptedText text={CONTENT.podcast.headline} speed={50} animateOn="view" />
-            </h2>
-          </ParallaxText>
-          <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap' }}>
-            {CONTENT.podcast.topics.map((topic) => (
-              <LineDrawLink key={topic} href="#" className="cursor-target" style={{ fontSize: '14px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono, padding: '12px 0' }}>{topic}</LineDrawLink>
-            ))}
+      {/* CONTACT - Section 6 */}
+      <section style={{ 
+        ...cardBase, 
+        backgroundColor: tokens.colors.dark, 
+        borderRadius: '32px 32px 0 0',
+        zIndex: activeSection === 6 ? 10 : 1,
+        opacity: activeSection === 6 ? 1 : 0,
+        transition: 'opacity 0.5s ease',
+        display: 'flex', flexDirection: 'column', justifyContent: 'space-between', 
+        ...sectionPadding,
+      }}>
+        <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>06</p>
+        <h2 className="cursor-target" style={{ fontSize: 'clamp(64px, 12vw, 180px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.04em', margin: 0, lineHeight: 0.9, marginLeft: '-8px' }}>
+          <DecryptedText text={CONTENT.contact.headline} speed={80} animateOn="view" />
+        </h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: '48px' }}>
+            <LineDrawLink href={`https://${CONTENT.contact.linkedin}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>LinkedIn</LineDrawLink>
+            <LineDrawLink href={`mailto:${CONTENT.contact.email}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>Email</LineDrawLink>
           </div>
-          <div className="cursor-target" style={{ marginTop: '80px', width: '100%', maxWidth: '400px', aspectRatio: '16/9', backgroundColor: tokens.colors.dark, borderRadius: '12px', border: `1px solid ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>VIDEO LOOP</div>
-        </section>
-
-        {/* CONTACT */}
-        <section id="section-6" style={{ ...cardBase, backgroundColor: tokens.colors.dark, borderRadius: '32px 32px 0 0', zIndex: 6, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '80px' }}>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>06</p>
-          <ParallaxText speed={0.3}>
-            <h2 className="cursor-target" style={{ fontSize: 'clamp(64px, 12vw, 180px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.04em', margin: 0, lineHeight: 0.9 }}>
-              <DecryptedText text={CONTENT.contact.headline} speed={80} animateOn="view" />
-            </h2>
-          </ParallaxText>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <div style={{ display: 'flex', gap: '48px' }}>
-              <LineDrawLink href={`https://${CONTENT.contact.linkedin}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>LinkedIn</LineDrawLink>
-              <LineDrawLink href={`mailto:${CONTENT.contact.email}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>Email</LineDrawLink>
-            </div>
-            <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: tokens.colors.white, color: tokens.colors.black, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button>
-          </div>
-        </section>
-      </main>
-
-      <div style={{ height: '50vh', backgroundColor: tokens.colors.dark }} />
+          <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: tokens.colors.white, color: tokens.colors.black, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button>
+        </div>
+      </section>
     </div>
   );
 }
