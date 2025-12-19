@@ -366,72 +366,59 @@ const Marquee = ({ items }) => (
 );
 
 // ============================================
-// DECRYPTED TEXT
+// DECRYPTED TEXT - Now triggers on isActive prop
 // ============================================
-const DecryptedText = ({ text, speed = 50, maxIterations = 10, sequential = true, characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', animateOn = 'view', delay = 0 }) => {
+const DecryptedText = ({ text, speed = 50, maxIterations = 10, sequential = true, characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', isActive = false, delay = 0 }) => {
   const [displayText, setDisplayText] = useState(text);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const revealedRef = useRef(new Set());
-  const hasAnimatedRef = useRef(false);
-  const containerRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const chars = useMemo(() => characters.split(''), [characters]);
 
   useEffect(() => {
-    if (!isAnimating) return;
-    let iteration = 0;
-    const interval = setInterval(() => {
-      if (sequential) {
-        if (revealedRef.current.size < text.length) {
-          revealedRef.current.add(revealedRef.current.size);
-          setDisplayText(text.split('').map((char, i) => {
-            if (char === ' ') return ' ';
-            if (revealedRef.current.has(i)) return text[i];
-            return chars[Math.floor(Math.random() * chars.length)];
-          }).join(''));
-        } else { clearInterval(interval); setIsAnimating(false); }
-      } else {
-        setDisplayText(text.split('').map((char) => char === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)]).join(''));
-        iteration++;
-        if (iteration >= maxIterations) { clearInterval(interval); setIsAnimating(false); setDisplayText(text); }
-      }
-    }, speed);
-    return () => clearInterval(interval);
-  }, [isAnimating, text, speed, maxIterations, sequential, chars]);
+    // Reset when becoming inactive
+    if (!isActive) {
+      setHasAnimated(false);
+      setDisplayText(text);
+      return;
+    }
+    
+    // Don't re-animate if already done
+    if (hasAnimated) return;
 
-  useEffect(() => {
-    if (animateOn !== 'view') return;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !hasAnimatedRef.current) {
-        setTimeout(() => { revealedRef.current = new Set(); setIsAnimating(true); hasAnimatedRef.current = true; }, delay);
-      }
-    }, { threshold: 0.1 });
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, [animateOn, delay]);
+    const timeoutId = setTimeout(() => {
+      let iteration = 0;
+      let revealed = new Set();
+      
+      const interval = setInterval(() => {
+        if (sequential) {
+          if (revealed.size < text.length) {
+            revealed.add(revealed.size);
+            setDisplayText(text.split('').map((char, i) => {
+              if (char === ' ') return ' ';
+              if (revealed.has(i)) return text[i];
+              return chars[Math.floor(Math.random() * chars.length)];
+            }).join(''));
+          } else {
+            clearInterval(interval);
+            setHasAnimated(true);
+          }
+        } else {
+          setDisplayText(text.split('').map((char) => char === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)]).join(''));
+          iteration++;
+          if (iteration >= maxIterations) {
+            clearInterval(interval);
+            setDisplayText(text);
+            setHasAnimated(true);
+          }
+        }
+      }, speed);
 
-  return <span ref={containerRef} aria-label={text}><span aria-hidden="true">{displayText}</span></span>;
-};
+      return () => clearInterval(interval);
+    }, delay);
 
-// ============================================
-// PARALLAX TEXT
-// ============================================
-const ParallaxText = ({ children, speed = 0.5, style }) => {
-  const [offset, setOffset] = useState(0);
-  const ref = useRef(null);
+    return () => clearTimeout(timeoutId);
+  }, [isActive, text, speed, maxIterations, sequential, chars, delay, hasAnimated]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const viewportCenter = window.innerHeight / 2;
-      const elementCenter = rect.top + rect.height / 2;
-      setOffset((viewportCenter - elementCenter) * speed * 0.1);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [speed]);
-
-  return <div ref={ref} style={{ ...style, transform: `translateY(${offset}px)`, transition: 'transform 100ms linear' }}>{children}</div>;
+  return <span aria-label={text}><span aria-hidden="true">{displayText}</span></span>;
 };
 
 // ============================================
@@ -463,12 +450,22 @@ const FixedNavbar = ({ activeSection, onNavigate }) => {
 // ============================================
 // FADE IN
 // ============================================
-const FadeIn = ({ children, delay = 0, style }) => {
+const FadeIn = ({ children, delay = 0, isActive = true }) => {
   const [visible, setVisible] = useState(false);
-  useEffect(() => { const timer = setTimeout(() => setVisible(true), delay); return () => clearTimeout(timer); }, [delay]);
+  
+  useEffect(() => {
+    if (!isActive) {
+      setVisible(false);
+      return;
+    }
+    const timer = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay, isActive]);
+
   return (
     <div style={{
-      ...style, opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(20px)',
+      opacity: visible ? 1 : 0, 
+      transform: visible ? 'translateY(0)' : 'translateY(20px)',
       transition: `opacity ${tokens.timing.slow} ${tokens.easing.page}, transform ${tokens.timing.slow} ${tokens.easing.page}`,
     }}>{children}</div>
   );
@@ -479,7 +476,6 @@ const FadeIn = ({ children, delay = 0, style }) => {
 // ============================================
 export default function App() {
   const [activeSection, setActiveSection] = useState(1);
-  const sections = [1, 2, 3, 4, 5, 6];
 
   // Disable scroll - only navbar navigation
   useEffect(() => {
@@ -520,22 +516,23 @@ export default function App() {
         backgroundColor: tokens.colors.black, 
         zIndex: activeSection === 1 ? 10 : 1,
         opacity: activeSection === 1 ? 1 : 0,
+        pointerEvents: activeSection === 1 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
         display: 'flex', flexDirection: 'column', justifyContent: 'space-between', 
         ...sectionPadding 
       }}>
-        <FadeIn delay={200}>
+        <FadeIn delay={200} isActive={activeSection === 1}>
           <div style={{ alignSelf: 'flex-end', textAlign: 'right' }}>
             <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>{CONTENT.hero.role}</p>
             <p style={{ fontSize: '11px', letterSpacing: '0.2em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '8px 0 0 0' }}>{CONTENT.hero.location}</p>
           </div>
         </FadeIn>
-        <FadeIn delay={500}>
+        <FadeIn delay={500} isActive={activeSection === 1}>
           <h1 className="cursor-target" style={{ fontSize: 'clamp(120px, 20vw, 280px)', fontWeight: 400, letterSpacing: '-0.05em', color: tokens.colors.white, margin: 0, lineHeight: 0.85, fontFamily: tokens.font, marginLeft: '-8px' }}>
-            <DecryptedText text={CONTENT.hero.name} speed={100} sequential={false} maxIterations={8} animateOn="view" />
+            <DecryptedText text={CONTENT.hero.name} speed={100} sequential={false} maxIterations={8} isActive={activeSection === 1} />
           </h1>
         </FadeIn>
-        <FadeIn delay={800}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
+        <FadeIn delay={800} isActive={activeSection === 1}><p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p></FadeIn>
       </section>
 
       {/* ABOUT - Section 2 */}
@@ -545,14 +542,15 @@ export default function App() {
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 2 ? 10 : 1,
         opacity: activeSection === 2 ? 1 : 0,
+        pointerEvents: activeSection === 2 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
         display: 'grid', gridTemplateColumns: '1fr 1fr',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 80px 80px 120px', borderRight: `1px dashed ${tokens.colors.border}` }}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 40px 0', textTransform: 'uppercase' }}>02</p>
           <h2 style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 400, color: tokens.colors.white, margin: 0, lineHeight: 1.15, fontFamily: tokens.font, letterSpacing: '-0.02em', marginLeft: '-4px' }}>
-            <DecryptedText text={CONTENT.about.statement} speed={35} animateOn="view" delay={100} /><br />
-            <span style={{ color: tokens.colors.mutedLight }}><DecryptedText text={CONTENT.about.statementLine2} speed={35} animateOn="view" delay={400} /></span>
+            <DecryptedText text={CONTENT.about.statement} speed={35} isActive={activeSection === 2} delay={100} /><br />
+            <span style={{ color: tokens.colors.mutedLight }}><DecryptedText text={CONTENT.about.statementLine2} speed={35} isActive={activeSection === 2} delay={400} /></span>
           </h2>
           <div className="cursor-target" style={{ marginTop: '48px', width: '120px', height: '120px', borderRadius: '50%', backgroundColor: tokens.colors.darkAlt, border: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>FOTO</div>
         </div>
@@ -560,7 +558,7 @@ export default function App() {
           {CONTENT.about.stats.map((stat, i) => (
             <div key={i} className="cursor-target" style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
               <span style={{ fontSize: 'clamp(64px, 8vw, 100px)', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', lineHeight: 1 }}>
-                <DecryptedText text={stat.value} speed={80} sequential={false} maxIterations={12} characters="0123456789" animateOn="view" delay={200 + i * 150} />
+                <DecryptedText text={stat.value} speed={80} sequential={false} maxIterations={12} characters="0123456789" isActive={activeSection === 2} delay={200 + i * 150} />
               </span>
               <span style={{ fontSize: '24px', color: tokens.colors.muted, fontFamily: tokens.font }}>{stat.unit}</span>
               <span style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em', marginLeft: '8px' }}>{stat.detail}</span>
@@ -576,6 +574,7 @@ export default function App() {
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 3 ? 10 : 1,
         opacity: activeSection === 3 ? 1 : 0,
+        pointerEvents: activeSection === 3 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
       }}>
@@ -593,7 +592,7 @@ export default function App() {
               display: 'block',
               marginLeft: '-4px',
             }}>
-              <DecryptedText text={word} speed={60} animateOn="view" delay={i * 150} />
+              <DecryptedText text={word} speed={60} isActive={activeSection === 3} delay={i * 150} />
             </span>
           ))}
         </div>
@@ -607,6 +606,7 @@ export default function App() {
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 4 ? 10 : 1,
         opacity: activeSection === 4 ? 1 : 0,
+        pointerEvents: activeSection === 4 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
         display: 'flex', alignItems: 'center', justifyContent: 'center', 
         ...sectionPadding,
@@ -614,7 +614,7 @@ export default function App() {
         <div style={{ maxWidth: '900px', textAlign: 'center' }}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '0 0 64px 0', textTransform: 'uppercase' }}>04 — Track Record</p>
           <blockquote className="cursor-target" style={{ fontSize: 'clamp(28px, 5vw, 56px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em', lineHeight: 1.2, margin: 0 }}>
-            <DecryptedText text={`"${CONTENT.quote.text}"`} speed={40} animateOn="view" />
+            <DecryptedText text={`"${CONTENT.quote.text}"`} speed={40} isActive={activeSection === 4} />
           </blockquote>
           <p style={{ fontSize: '12px', color: tokens.colors.muted, fontFamily: tokens.fontMono, marginTop: '48px', letterSpacing: '0.2em' }}>— {CONTENT.quote.author}</p>
         </div>
@@ -627,13 +627,14 @@ export default function App() {
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 5 ? 10 : 1,
         opacity: activeSection === 5 ? 1 : 0,
+        pointerEvents: activeSection === 5 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
         display: 'flex', flexDirection: 'column', justifyContent: 'center', 
         ...sectionPadding,
       }}>
         <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase' }}>05 — Podcast</p>
         <h2 style={{ fontSize: 'clamp(48px, 8vw, 100px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', margin: '0 0 64px 0', lineHeight: 1, marginLeft: '-4px' }}>
-          <DecryptedText text={CONTENT.podcast.headline} speed={50} animateOn="view" />
+          <DecryptedText text={CONTENT.podcast.headline} speed={50} isActive={activeSection === 5} />
         </h2>
         <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap' }}>
           {CONTENT.podcast.topics.map((topic) => (
@@ -650,13 +651,14 @@ export default function App() {
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 6 ? 10 : 1,
         opacity: activeSection === 6 ? 1 : 0,
+        pointerEvents: activeSection === 6 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
         display: 'flex', flexDirection: 'column', justifyContent: 'space-between', 
         ...sectionPadding,
       }}>
         <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>06</p>
         <h2 className="cursor-target" style={{ fontSize: 'clamp(64px, 12vw, 180px)', fontWeight: 400, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.04em', margin: 0, lineHeight: 0.9, marginLeft: '-8px' }}>
-          <DecryptedText text={CONTENT.contact.headline} speed={80} animateOn="view" />
+          <DecryptedText text={CONTENT.contact.headline} speed={80} isActive={activeSection === 6} />
         </h2>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div style={{ display: 'flex', gap: '48px' }}>
