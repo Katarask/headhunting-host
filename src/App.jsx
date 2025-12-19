@@ -567,7 +567,7 @@ export default function App() {
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>01</p>
         </FadeIn>
         <FadeIn delay={500} isActive={activeSection === 1}>
-          <h1 className="cursor-target" style={{ 
+          <h1 style={{ 
             fontSize: 'clamp(36px, 6vw, 72px)', 
             fontWeight: 400, 
             lineHeight: 1.1, 
@@ -578,20 +578,20 @@ export default function App() {
             <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
               Ich bin
             </span>{' '}
-            <span style={{ color: tokens.colors.white, fontWeight: 600 }}>
-              Headhunter,
+            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
+              <DecryptedText text="Headhunter," speed={80} sequential={false} maxIterations={10} useJobTitles={true} isActive={activeSection === 1} delay={200} />
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
               spezialisiert auf
             </span>{' '}
-            <span style={{ color: tokens.colors.white, fontWeight: 600 }}>
-              Tech & Engineering
+            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
+              <DecryptedText text="Tech & Engineering" speed={60} sequential={false} maxIterations={12} useJobTitles={true} isActive={activeSection === 1} delay={400} />
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
               in
             </span>{' '}
-            <span style={{ color: tokens.colors.white, fontWeight: 600 }}>
-              München.
+            <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600, display: 'inline-block' }}>
+              <DecryptedText text="München." speed={80} sequential={false} maxIterations={8} useJobTitles={true} isActive={activeSection === 1} delay={600} />
             </span>
           </h1>
         </FadeIn>
@@ -599,8 +599,8 @@ export default function App() {
       </section>
 
       {/* ABOUT - Section 2 */}
+      {/* ABOUT - Section 2 */}
       <section style={{ 
-        ...cardBase, 
         backgroundColor: tokens.colors.dark, 
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 2 ? 10 : 1,
