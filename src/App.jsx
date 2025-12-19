@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { gsap } from 'gsap';
+import ElectricBorder from './ElectricBorder';
 
 // ============================================
 // DESIGN TOKENS
@@ -10,7 +11,7 @@ const tokens = {
     black: '#0a0a0a',
     dark: '#111111',
     darkAlt: '#1a1a1a',
-    accent: '#0052FF',
+    accent: '#0098d4',
     muted: 'rgba(255, 255, 255, 0.6)',
     mutedLight: 'rgba(255, 255, 255, 0.6)',
     border: 'rgba(255, 255, 255, 0.08)',
@@ -466,6 +467,37 @@ const DecryptedText = ({ text, speed = 50, maxIterations = 10, sequential = true
 // ============================================
 // FIXED NAVBAR - Gray/transparent active state
 // ============================================
+const NavButton = ({ num, isActive, onClick }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <button 
+      onClick={onClick} 
+      className="cursor-target"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        width: '36px', 
+        height: '36px', 
+        borderRadius: '18px', 
+        border: 'none', 
+        cursor: 'none',
+        backgroundColor: isActive ? tokens.colors.navActive : 'transparent',
+        color: isActive ? tokens.colors.white : isHovered ? tokens.colors.accent : tokens.colors.muted,
+        fontSize: '11px', 
+        fontWeight: 500, 
+        fontFamily: tokens.fontMono,
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        transition: `all ${tokens.timing.fast} ${tokens.easing.hover}`,
+      }}
+    >
+      {num}
+    </button>
+  );
+};
+
 const FixedNavbar = ({ activeSection, onNavigate }) => {
   return (
     <nav className="cursor-target"
@@ -476,14 +508,12 @@ const FixedNavbar = ({ activeSection, onNavigate }) => {
         border: '1px solid rgba(255, 255, 255, 0.08)',
       }}>
       {[1, 2, 3, 4, 5, 6].map((num) => (
-        <button key={num} onClick={() => onNavigate(num)} className="cursor-target" style={{
-          width: '36px', height: '36px', borderRadius: '18px', border: 'none', cursor: 'none',
-          backgroundColor: activeSection === num ? tokens.colors.navActive : 'transparent',
-          color: activeSection === num ? tokens.colors.white : tokens.colors.muted,
-          fontSize: '11px', fontWeight: 500, fontFamily: tokens.fontMono,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: `all ${tokens.timing.fast} ${tokens.easing.hover}`,
-        }}>{num}</button>
+        <NavButton 
+          key={num} 
+          num={num} 
+          isActive={activeSection === num} 
+          onClick={() => onNavigate(num)} 
+        />
       ))}
     </nav>
   );
@@ -728,7 +758,7 @@ export default function App() {
             <LineDrawLink href={`https://${CONTENT.contact.linkedin}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>LinkedIn</LineDrawLink>
             <LineDrawLink href={`mailto:${CONTENT.contact.email}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>Email</LineDrawLink>
           </div>
-          <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: tokens.colors.white, color: tokens.colors.black, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button>
+          <ElectricBorder color="#0098d4" speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}><button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: tokens.colors.white, color: tokens.colors.black, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button></ElectricBorder>
         </div>
       </section>
     </div>
