@@ -168,9 +168,9 @@ const CostOfVacancyCalculator = () => {
       </div>
 
       <div style={{ marginBottom: '16px' }}>
-        <label style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, letterSpacing: '0.1em', display: 'block', marginBottom: '6px' }}>JAHRESGEHALT</label>
+        <label htmlFor="salary-input" style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, letterSpacing: '0.1em', display: 'block', marginBottom: '6px' }}>JAHRESGEHALT</label>
         <div style={{ position: 'relative' }}>
-          <input type="number" value={salary} onChange={(e) => setSalary(Number(e.target.value))} style={{
+          <input id="salary-input" type="number" value={salary} onChange={(e) => setSalary(Number(e.target.value))} style={{
             width: '100%', padding: '10px 50px 10px 14px', backgroundColor: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.2)',
             borderRadius: '8px', color: tokens.colors.white, fontSize: '15px', fontFamily: tokens.fontMono, outline: 'none', boxSizing: 'border-box',
           }} />
@@ -196,10 +196,10 @@ const CostOfVacancyCalculator = () => {
 
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
-          <label style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>OFFEN SEIT</label>
+          <label htmlFor="months-input" style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>OFFEN SEIT</label>
           <span style={{ fontSize: '13px', color: tokens.colors.white, fontFamily: tokens.fontMono, fontWeight: 600 }}>{months} {months === 1 ? 'Monat' : 'Monate'}</span>
         </div>
-        <input type="range" min="1" max="12" value={months} onChange={(e) => setMonths(Number(e.target.value))} style={{
+        <input id="months-input" type="range" min="1" max="12" value={months} onChange={(e) => setMonths(Number(e.target.value))} style={{
           width: '100%', height: '4px', borderRadius: '2px', background: 'linear-gradient(to right, #0098d4 ' + ((months - 1) / 11 * 100) + '%, rgba(0,0,0,0.3) ' + ((months - 1) / 11 * 100) + '%)',
           appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer',
         }} />
@@ -610,7 +610,14 @@ const DecryptedText = ({ text, speed = 50, maxIterations = 10, sequential = true
     return () => clearTimeout(timeoutId);
   }, [isActive, text, speed, maxIterations, sequential, delay, hasAnimated, useJobTitles]);
 
-  return <span aria-label={text}><span aria-hidden="true">{displayText}</span></span>;
+  // Screen reader accessible: hidden text + visible animated text
+  const srOnlyStyle = { position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 };
+  return (
+    <span style={{ position: 'relative' }}>
+      <span style={srOnlyStyle}>{text}</span>
+      <span aria-hidden="true">{displayText}</span>
+    </span>
+  );
 };
 
 // ============================================
