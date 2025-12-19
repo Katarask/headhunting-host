@@ -73,59 +73,26 @@ const CONTENT = {
   },
   blog: {
     posts: [
-      {
-        id: 1,
-        title: 'Warum 90% der Tech-Recruiter scheitern',
-        category: 'Recruiting',
-        date: '15. Dez 2024',
-        readTime: '5 min',
-        preview: `Die meisten Recruiter behandeln Kandidaten wie Nummern. Sie kopieren LinkedIn-Nachrichten, spammen Postfächer voll und wundern sich über 2% Response-Raten.
-
-Hier ist was ich anders mache und warum meine Antwortrate bei über 40% liegt.
-
-Das Problem beginnt schon bei der ersten Nachricht. "Hallo [Name], ich habe Ihr Profil gesehen und denke, Sie wären perfekt für eine spannende Position bei einem unserer Kunden." – So oder so ähnlich klingen 99% aller Recruiter-Nachrichten.
-
-Kein Wunder, dass niemand antwortet.
-
-Was funktioniert stattdessen? Personalisierung, die wirklich persönlich ist. Nicht "Ich habe gesehen, dass Sie bei [Firma] arbeiten", sondern echte Recherche.`,
-      },
-      {
-        id: 2,
-        title: 'Der perfekte Tech-Stack für Recruiting Automation',
-        category: 'Automatisierung',
-        date: '10. Dez 2024',
-        readTime: '8 min',
-        preview: `Make.com, Apify, Hunter.io – wie ich meinen Workflow automatisiert habe und jetzt 3x so viele Kandidaten erreiche mit der Hälfte der Zeit.
-
-Ein kompletter Walkthrough durch mein Setup.
-
-Schritt 1: Lead Generation
-Ich nutze Apify um LinkedIn Profile zu scrapen. Nicht random, sondern gezielt nach bestimmten Kriterien: Technologie-Stack, Erfahrungslevel, Location.
-
-Schritt 2: Email Finding
-Hunter.io findet die Business-Emails. Die Trefferquote liegt bei etwa 70% – gut genug für Scale.
-
-Schritt 3: Sequenzen
-Lemlist für die Outreach-Sequenzen. Personalisierte erste Nachricht, dann 2-3 Follow-ups mit Mehrwert.`,
-      },
-      {
-        id: 3,
-        title: 'Aerospace & Defense: Der unterschätzte Markt',
-        category: 'Markt',
-        date: '5. Dez 2024',
-        readTime: '6 min',
-        preview: `Während alle auf AI-Startups schauen, explodiert der Aerospace-Sektor in München. Hier ist warum das die beste Nische für Tech-Recruiter ist.
-
-München ist nicht nur BMW und Siemens. Die Stadt ist einer der wichtigsten Aerospace-Hubs in Europa. Airbus, MTU, IABG, OHB – und dutzende Zulieferer.
-
-Was diese Branche besonders macht:
-
-1. Stabilität – Aerospace-Projekte laufen über Jahre. Keine Startup-Unsicherheit.
-
-2. Gehälter – Top-Ingenieure verdienen hier 80-120k.
-
-3. Wenig Konkurrenz – Die meisten Recruiter fokussieren sich auf "sexy" Branchen.`,
-      },
+      { id: 1, title: 'Warum 90% der Tech-Recruiter scheitern', category: 'Recruiting', date: '15. Dez 2024', readTime: '5 min', preview: 'Die meisten Recruiter behandeln Kandidaten wie Nummern. Sie kopieren LinkedIn-Nachrichten, spammen Postfächer voll und wundern sich über 2% Response-Raten. Hier ist was ich anders mache.' },
+      { id: 2, title: 'Der perfekte Tech-Stack für Recruiting Automation', category: 'Automatisierung', date: '10. Dez 2024', readTime: '8 min', preview: 'Make.com, Apify, Hunter.io – wie ich meinen Workflow automatisiert habe und jetzt 3x so viele Kandidaten erreiche mit der Hälfte der Zeit.' },
+      { id: 3, title: 'Aerospace & Defense: Der unterschätzte Markt', category: 'Markt', date: '5. Dez 2024', readTime: '6 min', preview: 'Während alle auf AI-Startups schauen, explodiert der Aerospace-Sektor in München. Hier ist warum das die beste Nische ist.' },
+      { id: 4, title: 'LinkedIn Outreach: Was wirklich funktioniert', category: 'Recruiting', date: '1. Dez 2024', readTime: '7 min', preview: 'Nach 500+ Placements weiß ich genau, welche Nachrichten Antworten bekommen. Die Antwort wird dich überraschen.' },
+      { id: 5, title: 'Gehälter in Tech 2024: Der komplette Guide', category: 'Markt', date: '28. Nov 2024', readTime: '10 min', preview: 'Was verdienen Entwickler, DevOps und Engineering Manager wirklich? Echte Zahlen aus meiner täglichen Arbeit.' },
+      { id: 6, title: 'Warum ich keine Job-Descriptions mehr lese', category: 'Recruiting', date: '25. Nov 2024', readTime: '4 min', preview: 'Die meisten JDs sind nutzlos. Hier ist wie ich stattdessen die richtigen Kandidaten finde.' },
+      { id: 7, title: 'Remote vs. Hybrid vs. Office: Was Kandidaten wollen', category: 'Markt', date: '20. Nov 2024', readTime: '6 min', preview: 'Die Daten aus 200+ Gesprächen zeigen ein klares Bild. Und es ist nicht was die meisten Firmen denken.' },
+      { id: 8, title: 'Apify für Recruiter: Ein Walkthrough', category: 'Automatisierung', date: '15. Nov 2024', readTime: '12 min', preview: 'Schritt für Schritt: Wie ich Apify nutze um LinkedIn Profile zu scrapen und in mein CRM zu pushen.' },
+      { id: 9, title: 'Die Kunst des Nein-Sagens im Recruiting', category: 'Recruiting', date: '10. Nov 2024', readTime: '5 min', preview: 'Nicht jeder Kunde ist der richtige. Hier ist wie ich entscheide mit wem ich arbeite.' },
+      { id: 10, title: 'Engineering Manager finden: Mein Playbook', category: 'Recruiting', date: '5. Nov 2024', readTime: '9 min', preview: 'Die schwierigste Rolle zu besetzen. Hier ist mein kompletter Prozess von Sourcing bis Offer.' },
+      { id: 11, title: 'Warum Kandidaten absagen (und was du dagegen tun kannst)', category: 'Recruiting', date: '1. Nov 2024', readTime: '6 min', preview: 'Die Top 5 Gründe warum gute Kandidaten im Prozess abspringen. Nummer 3 ist vermeidbar.' },
+      { id: 12, title: 'Hunter.io vs. Lusha vs. Apollo: Der Vergleich', category: 'Automatisierung', date: '28. Okt 2024', readTime: '8 min', preview: 'Welches Tool ist das beste für Email-Finding? Ich habe alle drei getestet.' },
+      { id: 13, title: 'Wie ich 500+ Placements in 7 Jahren geschafft habe', category: 'Karriere', date: '25. Okt 2024', readTime: '7 min', preview: 'Ein ehrlicher Rückblick auf meinen Weg. Die Fehler, die Learnings, die Durchbrüche.' },
+      { id: 14, title: 'Tech-Recruiting in München: Ein Insider-Guide', category: 'Markt', date: '20. Okt 2024', readTime: '11 min', preview: 'Die wichtigsten Companies, die versteckten Champions, und wo die besten Talente arbeiten.' },
+      { id: 15, title: 'Cold Calling ist nicht tot', category: 'Recruiting', date: '15. Okt 2024', readTime: '5 min', preview: 'Unpopuläre Meinung: Manchmal ist ein Anruf effektiver als 100 LinkedIn-Nachrichten.' },
+      { id: 16, title: 'Mein CRM-Setup für maximale Effizienz', category: 'Automatisierung', date: '10. Okt 2024', readTime: '9 min', preview: 'Pipedrive, Make.com, und ein paar Tricks die mir Stunden pro Woche sparen.' },
+      { id: 17, title: 'Was CTOs wirklich von Recruitern erwarten', category: 'Recruiting', date: '5. Okt 2024', readTime: '6 min', preview: 'Ich habe 20 CTOs gefragt. Die Antworten waren überraschend einheitlich.' },
+      { id: 18, title: 'Der perfekte Kandidaten-Pitch', category: 'Recruiting', date: '1. Okt 2024', readTime: '5 min', preview: 'Wie du einen Job so präsentierst, dass Top-Talente nicht nein sagen können.' },
+      { id: 19, title: 'Freelancer vs. Festanstellung: Der Trend 2024', category: 'Markt', date: '28. Sep 2024', readTime: '7 min', preview: 'Immer mehr Entwickler gehen in die Selbstständigkeit. Was bedeutet das für Recruiter?' },
+      { id: 20, title: 'Meine Morgenroutine als Headhunter', category: 'Karriere', date: '25. Sep 2024', readTime: '4 min', preview: 'Die ersten 2 Stunden entscheiden über den Tag. Hier ist wie ich sie nutze.' },
     ],
   },
   podcast: {
@@ -767,46 +734,68 @@ export default function App() {
         display: 'grid', 
         gridTemplateColumns: '1fr 1fr',
       }}>
-        {/* Left - Article List */}
+        {/* Left - Article List with Fade Mask */}
         <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 
-          justifyContent: 'center', 
-          padding: '80px 80px 80px 120px',
+          padding: '80px 40px 80px 120px',
           borderRight: `1px dashed ${tokens.colors.border}`,
+          height: '100%',
+          overflow: 'hidden',
         }}>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 48px 0', textTransform: 'uppercase' }}>04 — Blog</p>
+          {/* Fixed Header */}
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase', flexShrink: 0 }}>04 — Blog</p>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-            {CONTENT.blog.posts.map((post, index) => (
-              <div 
-                key={post.id}
-                className="cursor-target"
-                onClick={() => setSelectedBlogPost(post)}
-                onMouseEnter={() => setHoveredBlogId(post.id)}
-                onMouseLeave={() => setHoveredBlogId(null)}
-                style={{ 
-                  cursor: 'pointer',
-                  opacity: selectedBlogPost.id === post.id ? 1 : (hoveredBlogId === post.id ? 0.7 : 0.4),
-                  transform: selectedBlogPost.id === post.id ? 'translateX(8px)' : 'translateX(0)',
-                  transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
-                  <span style={{ fontSize: '12px', color: selectedBlogPost.id === post.id ? tokens.colors.accent : tokens.colors.muted, fontFamily: tokens.fontMono, transition: 'color 0.3s ease', marginTop: '4px' }}>0{index + 1}</span>
-                  <div>
-                    <span style={{ fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, display: 'block', marginBottom: '8px', letterSpacing: '0.1em' }}>{post.category.toUpperCase()} · {post.readTime}</span>
-                    <h3 style={{ fontSize: '18px', fontWeight: selectedBlogPost.id === post.id ? 500 : 400, color: selectedBlogPost.id === post.id ? tokens.colors.white : tokens.colors.mutedLight, margin: 0, transition: 'all 0.3s ease', lineHeight: 1.35 }}>{post.title}</h3>
+          {/* Scrollable List with Fade Mask */}
+          <div 
+            className="blog-list-scroll"
+            style={{ 
+              flex: 1,
+              overflowY: 'auto',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
+              paddingTop: '24px',
+              paddingBottom: '24px',
+            }}
+          >
+            <style>{`
+              .blog-list-scroll::-webkit-scrollbar { width: 3px; }
+              .blog-list-scroll::-webkit-scrollbar-track { background: transparent; }
+              .blog-list-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+              .blog-list-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+            `}</style>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {CONTENT.blog.posts.map((post, index) => (
+                <div 
+                  key={post.id}
+                  className="cursor-target"
+                  onClick={() => setSelectedBlogPost(post)}
+                  onMouseEnter={() => setHoveredBlogId(post.id)}
+                  onMouseLeave={() => setHoveredBlogId(null)}
+                  style={{ 
+                    cursor: 'pointer',
+                    opacity: selectedBlogPost.id === post.id ? 1 : (hoveredBlogId === post.id ? 0.7 : 0.35),
+                    transform: selectedBlogPost.id === post.id ? 'translateX(8px)' : 'translateX(0)',
+                    transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                    <span style={{ fontSize: '11px', color: selectedBlogPost.id === post.id ? tokens.colors.accent : tokens.colors.muted, fontFamily: tokens.fontMono, transition: 'color 0.3s ease', marginTop: '3px', minWidth: '20px' }}>{String(index + 1).padStart(2, '0')}</span>
+                    <div>
+                      <span style={{ fontSize: '9px', color: tokens.colors.muted, fontFamily: tokens.fontMono, display: 'block', marginBottom: '6px', letterSpacing: '0.1em' }}>{post.category.toUpperCase()}</span>
+                      <h3 style={{ fontSize: '15px', fontWeight: selectedBlogPost.id === post.id ? 500 : 400, color: selectedBlogPost.id === post.id ? tokens.colors.white : tokens.colors.mutedLight, margin: 0, transition: 'all 0.3s ease', lineHeight: 1.4 }}>{post.title}</h3>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* More Articles Hint */}
-          <div className="cursor-target" style={{ marginTop: '48px', paddingTop: '24px', borderTop: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', opacity: 0.5, transition: 'opacity 0.3s ease' }}>
-            <span style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono, letterSpacing: '0.05em' }}>Alle Artikel ansehen</span>
-            <span style={{ fontSize: '16px', color: tokens.colors.accent }}>→</span>
+          {/* Fixed Footer */}
+          <div className="cursor-target" style={{ marginTop: '24px', paddingTop: '20px', borderTop: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', opacity: 0.5, transition: 'opacity 0.3s ease', flexShrink: 0 }}>
+            <span style={{ fontSize: '11px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono, letterSpacing: '0.05em' }}>Alle 20 Artikel</span>
+            <span style={{ fontSize: '14px', color: tokens.colors.accent }}>→</span>
           </div>
         </div>
 
@@ -838,7 +827,6 @@ export default function App() {
           </div>
         </div>
       </section>
-
       {/* PODCAST - Section 5 */}
       <section style={{ 
         ...cardBase, 
