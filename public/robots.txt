@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://deniz-portfolio.vercel.app/sitemap.xml
