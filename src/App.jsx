@@ -79,7 +79,7 @@ const CONTENT = {
         category: 'Recruiting',
         date: '15. Dez 2024',
         readTime: '5 min',
-        preview: \`Die meisten Recruiter behandeln Kandidaten wie Nummern. Sie kopieren LinkedIn-Nachrichten, spammen Postfächer voll und wundern sich über 2% Response-Raten.
+        preview: `Die meisten Recruiter behandeln Kandidaten wie Nummern. Sie kopieren LinkedIn-Nachrichten, spammen Postfächer voll und wundern sich über 2% Response-Raten.
 
 Hier ist was ich anders mache und warum meine Antwortrate bei über 40% liegt.
 
@@ -87,7 +87,7 @@ Das Problem beginnt schon bei der ersten Nachricht. "Hallo [Name], ich habe Ihr 
 
 Kein Wunder, dass niemand antwortet.
 
-Was funktioniert stattdessen? Personalisierung, die wirklich persönlich ist. Nicht "Ich habe gesehen, dass Sie bei [Firma] arbeiten", sondern echte Recherche.\`,
+Was funktioniert stattdessen? Personalisierung, die wirklich persönlich ist. Nicht "Ich habe gesehen, dass Sie bei [Firma] arbeiten", sondern echte Recherche.`,
       },
       {
         id: 2,
@@ -95,7 +95,7 @@ Was funktioniert stattdessen? Personalisierung, die wirklich persönlich ist. Ni
         category: 'Automatisierung',
         date: '10. Dez 2024',
         readTime: '8 min',
-        preview: \`Make.com, Apify, Hunter.io – wie ich meinen Workflow automatisiert habe und jetzt 3x so viele Kandidaten erreiche mit der Hälfte der Zeit.
+        preview: `Make.com, Apify, Hunter.io – wie ich meinen Workflow automatisiert habe und jetzt 3x so viele Kandidaten erreiche mit der Hälfte der Zeit.
 
 Ein kompletter Walkthrough durch mein Setup.
 
@@ -106,7 +106,7 @@ Schritt 2: Email Finding
 Hunter.io findet die Business-Emails. Die Trefferquote liegt bei etwa 70% – gut genug für Scale.
 
 Schritt 3: Sequenzen
-Lemlist für die Outreach-Sequenzen. Personalisierte erste Nachricht, dann 2-3 Follow-ups mit Mehrwert.\`,
+Lemlist für die Outreach-Sequenzen. Personalisierte erste Nachricht, dann 2-3 Follow-ups mit Mehrwert.`,
       },
       {
         id: 3,
@@ -114,7 +114,7 @@ Lemlist für die Outreach-Sequenzen. Personalisierte erste Nachricht, dann 2-3 F
         category: 'Markt',
         date: '5. Dez 2024',
         readTime: '6 min',
-        preview: \`Während alle auf AI-Startups schauen, explodiert der Aerospace-Sektor in München. Hier ist warum das die beste Nische für Tech-Recruiter ist.
+        preview: `Während alle auf AI-Startups schauen, explodiert der Aerospace-Sektor in München. Hier ist warum das die beste Nische für Tech-Recruiter ist.
 
 München ist nicht nur BMW und Siemens. Die Stadt ist einer der wichtigsten Aerospace-Hubs in Europa. Airbus, MTU, IABG, OHB – und dutzende Zulieferer.
 
@@ -124,7 +124,7 @@ Was diese Branche besonders macht:
 
 2. Gehälter – Top-Ingenieure verdienen hier 80-120k.
 
-3. Wenig Konkurrenz – Die meisten Recruiter fokussieren sich auf "sexy" Branchen.\`,
+3. Wenig Konkurrenz – Die meisten Recruiter fokussieren sich auf "sexy" Branchen.`,
       },
     ],
   },
@@ -812,12 +812,12 @@ export default function App() {
 
         {/* Right - Scrollable Preview */}
         <div style={{ overflowY: 'auto', padding: '80px' }} className="blog-scroll">
-          <style>{\`
+          <style>{`
             .blog-scroll::-webkit-scrollbar { width: 4px; }
             .blog-scroll::-webkit-scrollbar-track { background: transparent; }
             .blog-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
             .blog-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
-          \`}</style>
+          `}</style>
           
           {/* Sticky Header */}
           <div style={{ position: 'sticky', top: 0, backgroundColor: tokens.colors.darkAlt, paddingBottom: '20px', marginBottom: '8px', zIndex: 10 }}>
