@@ -800,46 +800,46 @@ export default function App() {
         {/* Left - Pain Point Text */}
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 40px 60px 120px' }}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase' }}>
-            <DecryptedText text="02 — Das Problem" speed={50} sequential={false} maxIterations={8} isActive={activeSection === 2} delay={0} />
+            <DecryptedText text="02 — Das Problem" speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={0} />
           </p>
           
           <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: tokens.colors.white, margin: '0 0 28px 0', lineHeight: 1.2, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-            <DecryptedText text="Jede offene Stelle kostet " speed={50} sequential={false} maxIterations={8} isActive={activeSection === 2} delay={400} />
-            <span style={{ color: tokens.colors.accent }}><DecryptedText text="bares Geld." speed={50} sequential={false} maxIterations={8} isActive={activeSection === 2} delay={800} /></span>
+            <DecryptedText text="Jede offene Stelle kostet " speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={800} />
+            <span style={{ color: tokens.colors.accent }}><DecryptedText text="bares Geld." speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={1600} /></span>
           </h2>
           
           <p style={{ fontSize: '15px', color: tokens.colors.mutedLight, lineHeight: 1.7, margin: '0 0 20px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
-            <DecryptedText text="Während Sie nach dem perfekten Kandidaten suchen, verlieren Sie täglich Produktivität. Ihr Team arbeitet über Kapazität, Projekte verzögern sich, und die besten Talente gehen zur Konkurrenz." speed={40} sequential={false} maxIterations={10} isActive={activeSection === 2} delay={1200} />
+            <DecryptedText text="Während Sie nach dem perfekten Kandidaten suchen, verlieren Sie täglich Produktivität. Ihr Team arbeitet über Kapazität, Projekte verzögern sich, und die besten Talente gehen zur Konkurrenz." speed={100} sequential={false} maxIterations={18} isActive={activeSection === 2} delay={2400} />
           </p>
           
           <p style={{ fontSize: '15px', color: tokens.colors.muted, lineHeight: 1.7, margin: '0 0 36px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
-            <DecryptedText text="Die durchschnittliche Tech-Position bleibt 42 Tage unbesetzt. Bei Senior-Rollen oft 3-6 Monate. Rechnen Sie selbst." speed={40} sequential={false} maxIterations={10} isActive={activeSection === 2} delay={1600} />
+            <DecryptedText text="Die durchschnittliche Tech-Position bleibt 42 Tage unbesetzt. Bei Senior-Rollen oft 3-6 Monate. Rechnen Sie selbst." speed={100} sequential={false} maxIterations={18} isActive={activeSection === 2} delay={4200} />
           </p>
 
           {/* Quick Stats Row */}
           <div style={{ display: 'flex', gap: '40px', paddingTop: '20px', borderTop: `1px solid ${tokens.colors.border}` }}>
             <div>
               <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-                <DecryptedText text="42" speed={60} sequential={false} maxIterations={12} isActive={activeSection === 2} delay={2000} />
+                <DecryptedText text="42" speed={150} sequential={false} maxIterations={20} isActive={activeSection === 2} delay={6000} />
               </span>
               <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
-                <DecryptedText text="Tage ⌀ unbesetzt" speed={50} sequential={false} maxIterations={8} isActive={activeSection === 2} delay={2100} />
+                <DecryptedText text="Tage ⌀ unbesetzt" speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={6200} />
               </p>
             </div>
             <div>
               <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-                <DecryptedText text="1.5x" speed={60} sequential={false} maxIterations={12} isActive={activeSection === 2} delay={2300} />
+                <DecryptedText text="1.5x" speed={150} sequential={false} maxIterations={20} isActive={activeSection === 2} delay={6800} />
               </span>
               <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
-                <DecryptedText text="Gehalt = Verlust" speed={50} sequential={false} maxIterations={8} isActive={activeSection === 2} delay={2400} />
+                <DecryptedText text="Gehalt = Verlust" speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={7000} />
               </p>
             </div>
             <div>
               <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
-                <DecryptedText text="73%" speed={60} sequential={false} maxIterations={12} isActive={activeSection === 2} delay={2600} />
+                <DecryptedText text="73%" speed={150} sequential={false} maxIterations={20} isActive={activeSection === 2} delay={7600} />
               </span>
               <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
-                <DecryptedText text="versteckte Kosten" speed={50} sequential={false} maxIterations={8} isActive={activeSection === 2} delay={2700} />
+                <DecryptedText text="versteckte Kosten" speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={7800} />
               </p>
             </div>
           </div>
@@ -850,6 +850,9 @@ export default function App() {
           <CostOfVacancyCalculator />
         </div>
       </section>
+
+
+
 
 
 
