@@ -568,7 +568,7 @@ export default function App() {
         </FadeIn>
         <FadeIn delay={400} isActive={activeSection === 1}>
           <h1 style={{ 
-            fontSize: 'clamp(48px, 8vw, 104px)', 
+            fontSize: 'clamp(36px, 6vw, 72px)', 
             fontWeight: 400, 
             lineHeight: 1.1, 
             margin: 0, 
