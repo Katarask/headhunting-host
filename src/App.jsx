@@ -1224,8 +1224,8 @@ export default function App() {
             lineHeight: 1.1, 
             margin: 0, 
             fontFamily: tokens.font,
-            maxWidth: '1100px',
           }}>
+            {/* Zeile 1: Ich bin Headhunter, spezialisiert auf */}
             <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
               <DecryptedText text="Ich bin" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={0} />
             </span>{' '}
@@ -1234,10 +1234,14 @@ export default function App() {
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
               <DecryptedText text="spezialisiert auf" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={400} />
-            </span>{' '}
+            </span>
+            <br />
+            {/* Zeile 2: Tech & Engineering */}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
               <DecryptedText text="Tech & Engineering" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={600} />
-            </span>{' '}
+            </span>
+            <br />
+            {/* Zeile 3: in München */}
             <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
               <DecryptedText text="in" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={800} />
             </span>{' '}
@@ -1245,20 +1249,20 @@ export default function App() {
               <DecryptedText text="München." speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={1000} />
             </span>
           </h1>
-        </FadeIn>
-
-        </div>
-
-        {/* Button bottom right - outside content wrapper */}
-        <FadeIn delay={600} isActive={activeSection === 1}>
-          <div style={{ position: "absolute", bottom: "60px", right: "80px", zIndex: 10 }}>
+          
+          {/* Button unter dem Text */}
+          <div style={{ marginTop: "40px", display: "inline-block" }}>
             <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: "100px" }}>
               <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: "16px 40px", backgroundColor: "transparent", color: tokens.colors.white, border: "none", borderRadius: "100px", fontSize: "12px", fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: "0.1em", cursor: "none", textTransform: "uppercase" }}>Kontakt</button>
             </ElectricBorder>
           </div>
         </FadeIn>
-      </section>      {/* ABOUT - Section 2: Cost of Vacancy */}
-      <section style={{ 
+
+        </div>
+      </section>
+
+      {/* ABOUT - Section 2: Cost of Vacancy */}
+      <section style={{
         ...cardBase,
         backgroundColor: tokens.colors.sand, 
         borderRadius: '32px 32px 0 0',
