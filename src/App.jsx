@@ -1213,7 +1213,7 @@ export default function App() {
         </div>
         {/* Dark overlay */}
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(10, 10, 10, 0.5)", zIndex: 1 }} />
-        <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: "40px", paddingTop: "40vh", flex: 1 }}><FadeIn delay={200} isActive={activeSection === 1}>
+        <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", justifyContent: "center", gap: "40px", flex: 1 }}><FadeIn delay={200} isActive={activeSection === 1}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>01</p>
         </FadeIn>
         
@@ -1226,19 +1226,19 @@ export default function App() {
             fontFamily: tokens.font,
             maxWidth: '1100px',
           }}>
-            <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
+            <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
               <DecryptedText text="Ich bin" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={0} />
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
               <DecryptedText text="Headhunter," speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={200} />
             </span>{' '}
-            <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
+            <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
               <DecryptedText text="spezialisiert auf" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={400} />
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
               <DecryptedText text="Tech & Engineering" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={600} />
             </span>{' '}
-            <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
+            <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
               <DecryptedText text="in" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={800} />
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
