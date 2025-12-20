@@ -894,86 +894,178 @@ const Marquee = ({ items }) => (
 // ============================================
 // DECRYPTED TEXT - Shows job titles while scrambling
 // ============================================
-const DecryptedText = ({ text, speed = 50, maxIterations = 10, sequential = true, useJobTitles = false, isActive = false, delay = 0 }) => {
-  const [displayText, setDisplayText] = useState(text);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  
-  // Characters for number-only texts (stats)
-  const numberChars = '0123456789';
-  const letterChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+// ============================================
+// ANDURIL-STYLE SCRAMBLE TEXT
+// Sequential character reveal with random scramble
+// ============================================
+const DecryptedText = ({ 
+  text, 
+  speed = 30,           // ms per character (lower = faster)
+  isActive = false, 
+  delay = 0,
+  scrambleOut = false,  // Also scramble out when leaving section
+  // Legacy props (kept for compatibility)
+  maxIterations = 10,
+  sequential = true,
+  useJobTitles = false,
+}) => {
+  const elRef = useRef(null);
+  const stateRef = useRef({
+    running: false,
+    direction: 'in',
+    position: 0,
+    startTime: 0,
+    contents: [],
+    animFrameId: null,
+    hasCompletedIn: false,
+    lastActiveState: null,
+  });
 
+  // Character sets
+  const DEFAULT_CHARS = useMemo(() => [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+  ], []);
+  const NUMBER_CHARS = useMemo(() => ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], []);
+
+  // Determine charset based on text content
+  const isNumberOnly = useMemo(() => /^[\d.,%+x]+$/.test(text.replace(/\s/g, '')), [text]);
+  const chars = isNumberOnly ? NUMBER_CHARS : DEFAULT_CHARS;
+
+  // Split text into characters, preserving spaces
+  const splitText = useCallback((str) => {
+    return str.split('').map((char, i) => ({
+      type: /\s/.test(char) ? 'space' : 'character',
+      content: char,
+      index: i
+    }));
+  }, []);
+
+  // Get random character
+  const getRandChar = useCallback(() => {
+    const char = chars[Math.floor(Math.random() * chars.length)];
+    return Math.random() < 0.5 ? char.toLowerCase() : char;
+  }, [chars]);
+
+  // Generate display text based on position
+  const generateDisplay = useCallback((contents, position, direction) => {
+    return contents.map((item, i) => {
+      if (item.type === 'space') return item.content;
+      
+      if (direction === 'in') {
+        return i < position ? item.content : getRandChar();
+      } else {
+        return i < position ? getRandChar() : item.content;
+      }
+    }).join('');
+  }, [getRandChar]);
+
+  // Animation loop
+  const animate = useCallback(() => {
+    const state = stateRef.current;
+    const el = elRef.current;
+    if (!el || !state.running) return;
+
+    const elapsed = Date.now() - state.startTime;
+    state.position = Math.floor(elapsed / speed);
+
+    // Check completion
+    if (state.position >= state.contents.length) {
+      state.running = false;
+      
+      if (state.direction === 'in') {
+        el.textContent = text;
+        state.hasCompletedIn = true;
+      } else {
+        el.textContent = generateDisplay(state.contents, state.contents.length, 'out');
+        state.hasCompletedIn = false;
+      }
+      return;
+    }
+
+    // Continue animation
+    el.textContent = generateDisplay(state.contents, state.position, state.direction);
+    state.animFrameId = requestAnimationFrame(animate);
+  }, [speed, text, generateDisplay]);
+
+  // Start animation
+  const startAnimation = useCallback((direction) => {
+    const state = stateRef.current;
+    const el = elRef.current;
+    if (!el) return;
+
+    if (state.animFrameId) {
+      cancelAnimationFrame(state.animFrameId);
+    }
+
+    state.contents = splitText(text);
+    state.direction = direction;
+    state.position = 0;
+    state.startTime = Date.now();
+    state.running = true;
+
+    // Initial display
+    if (direction === 'in') {
+      el.textContent = generateDisplay(state.contents, 0, 'in');
+    }
+
+    animate();
+  }, [text, splitText, generateDisplay, animate]);
+
+  // Handle isActive changes
   useEffect(() => {
-    if (!isActive) {
-      setHasAnimated(false);
-      setDisplayText(text);
+    const state = stateRef.current;
+    
+    // First render - initialize lastActiveState
+    if (state.lastActiveState === null) {
+      state.lastActiveState = isActive;
+      if (isActive) {
+        const timeoutId = setTimeout(() => startAnimation('in'), delay);
+        return () => clearTimeout(timeoutId);
+      }
       return;
     }
     
-    if (hasAnimated) return;
+    // Detect transition
+    const wasActive = state.lastActiveState;
+    state.lastActiveState = isActive;
 
-    const timeoutId = setTimeout(() => {
-      let iteration = 0;
-      let revealed = new Set();
-      
-      // Check if text is only numbers
-      const isNumberOnly = /^\d+$/.test(text);
-      const chars = isNumberOnly ? numberChars : letterChars;
-      
-      const interval = setInterval(() => {
-        if (sequential) {
-          if (revealed.size < text.length) {
-            revealed.add(revealed.size);
-            
-            if (useJobTitles && !isNumberOnly) {
-              // Show random job title, truncated to match text length
-              const randomJob = JOB_TITLES[Math.floor(Math.random() * JOB_TITLES.length)];
-              const paddedJob = randomJob.padEnd(text.length, ' ').slice(0, text.length);
-              
-              setDisplayText(text.split('').map((char, i) => {
-                if (char === ' ') return ' ';
-                if (revealed.has(i)) return text[i];
-                return paddedJob[i] || chars[Math.floor(Math.random() * chars.length)];
-              }).join(''));
-            } else {
-              setDisplayText(text.split('').map((char, i) => {
-                if (char === ' ') return ' ';
-                if (revealed.has(i)) return text[i];
-                return chars[Math.floor(Math.random() * chars.length)];
-              }).join(''));
-            }
-          } else {
-            clearInterval(interval);
-            setHasAnimated(true);
-          }
-        } else {
-          if (useJobTitles && !isNumberOnly) {
-            // Show random job title
-            const randomJob = JOB_TITLES[Math.floor(Math.random() * JOB_TITLES.length)];
-            setDisplayText(randomJob.slice(0, text.length).padEnd(text.length, ' '));
-          } else {
-            setDisplayText(text.split('').map((char) => char === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)]).join(''));
-          }
-          iteration++;
-          if (iteration >= maxIterations) {
-            clearInterval(interval);
-            setDisplayText(text);
-            setHasAnimated(true);
-          }
-        }
-      }, speed);
+    if (isActive && !wasActive) {
+      // Becoming active - start reveal
+      const timeoutId = setTimeout(() => startAnimation('in'), delay);
+      return () => clearTimeout(timeoutId);
+    } else if (!isActive && wasActive && scrambleOut && state.hasCompletedIn) {
+      // Becoming inactive - scramble out
+      startAnimation('out');
+    }
+  }, [isActive, delay, scrambleOut, startAnimation]);
 
-      return () => clearInterval(interval);
-    }, delay);
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (stateRef.current.animFrameId) {
+        cancelAnimationFrame(stateRef.current.animFrameId);
+      }
+    };
+  }, []);
 
-    return () => clearTimeout(timeoutId);
-  }, [isActive, text, speed, maxIterations, sequential, delay, hasAnimated, useJobTitles]);
+  // Initial scrambled display
+  const initialDisplay = useMemo(() => {
+    const contents = splitText(text);
+    return generateDisplay(contents, 0, 'in');
+  }, [text, splitText, generateDisplay]);
 
-  // Screen reader accessible: hidden text + visible animated text
-  const srOnlyStyle = { position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 };
   return (
     <span style={{ position: 'relative' }}>
-      <span style={srOnlyStyle}>{text}</span>
-      <span aria-hidden="true">{displayText}</span>
+      <span style={{ 
+        position: 'absolute', width: '1px', height: '1px', padding: 0, 
+        margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', 
+        whiteSpace: 'nowrap', border: 0 
+      }}>
+        {text}
+      </span>
+      <span ref={elRef} aria-hidden="true">{initialDisplay}</span>
     </span>
   );
 };
