@@ -576,11 +576,11 @@ const TalentCarousel = ({ isActive }) => {
         </div>
       </div>
       <div style={{ marginTop: '30px', textAlign: 'center' }}>
-        <ElectricBorder color={tokens.colors.white} speed={1.5} chaos={0.3} thickness={2} style={{ borderRadius: '100px' }}>
+        <ElectricBorder color={tokens.colors.burgundy} speed={1.5} chaos={0.3} thickness={2} style={{ borderRadius: '100px' }}>
           <button
             onClick={() => window.location.href = `mailto:${CONTENT.contact.email}?subject=Anfrage: ${activeCandidate.position} (Kandidat %23${activeCandidate.id})`}
             style={{
-              padding: '14px 36px', backgroundColor: 'transparent', color: tokens.colors.white, border: 'none',
+              padding: '14px 36px', backgroundColor: 'transparent', color: tokens.colors.burgundy, border: 'none',
               fontSize: '11px', fontWeight: 600, fontFamily: tokens.fontMono, letterSpacing: '0.1em',
               cursor: 'pointer', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px',
             }}
@@ -1122,19 +1122,19 @@ export default function App() {
             fontFamily: tokens.font,
             maxWidth: '1100px',
           }}>
-            <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
+            <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
               Ich bin
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
               Headhunter,
             </span>{' '}
-            <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
+            <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
               spezialisiert auf
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
               Tech & Engineering
             </span>{' '}
-            <span style={{ color: tokens.colors.muted, fontStyle: 'italic', fontWeight: 300 }}>
+            <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
               in
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
@@ -1170,14 +1170,14 @@ export default function App() {
           
           <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: tokens.colors.black, margin: '0 0 28px 0', lineHeight: 1.2, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
             <DecryptedText text="Jede offene Stelle kostet " speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={800} />
-            <span style={{ color: tokens.colors.accent }}><DecryptedText text="bares Geld." speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={1600} /></span>
+            <span style={{ color: tokens.colors.black }}><DecryptedText text="bares Geld." speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={1600} /></span>
           </h2>
           
-          <p style={{ fontSize: '15px', color: "rgba(10, 10, 10, 0.7)", lineHeight: 1.7, margin: '0 0 20px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
+          <p style={{ fontSize: '15px', color: tokens.colors.black, lineHeight: 1.7, margin: '0 0 20px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
             <DecryptedText text="Während Sie nach dem perfekten Kandidaten suchen, verlieren Sie täglich Produktivität. Ihr Team arbeitet über Kapazität, Projekte verzögern sich, und die besten Talente gehen zur Konkurrenz." speed={100} sequential={false} maxIterations={18} isActive={activeSection === 2} delay={2400} />
           </p>
           
-          <p style={{ fontSize: '15px', color: "rgba(10, 10, 10, 0.5)", lineHeight: 1.7, margin: '0 0 36px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
+          <p style={{ fontSize: '15px', color: tokens.colors.black, lineHeight: 1.7, margin: '0 0 36px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
             <DecryptedText text="Die durchschnittliche Tech-Position bleibt 42 Tage unbesetzt. Bei Senior-Rollen oft 3-6 Monate. Rechnen Sie selbst." speed={100} sequential={false} maxIterations={18} isActive={activeSection === 2} delay={4200} />
           </p>
 
@@ -1187,7 +1187,7 @@ export default function App() {
               <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
                 <DecryptedText text="42" speed={150} sequential={false} maxIterations={20} isActive={activeSection === 2} delay={6000} />
               </span>
-              <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
+              <p style={{ fontSize: '11px', color: tokens.colors.black, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
                 <DecryptedText text="Tage ⌀ unbesetzt" speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={6200} />
               </p>
             </div>
@@ -1195,7 +1195,7 @@ export default function App() {
               <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
                 <DecryptedText text="1.5x" speed={150} sequential={false} maxIterations={20} isActive={activeSection === 2} delay={6800} />
               </span>
-              <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
+              <p style={{ fontSize: '11px', color: tokens.colors.black, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
                 <DecryptedText text="Gehalt = Verlust" speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={7000} />
               </p>
             </div>
@@ -1203,7 +1203,7 @@ export default function App() {
               <span style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
                 <DecryptedText text="73%" speed={150} sequential={false} maxIterations={20} isActive={activeSection === 2} delay={7600} />
               </span>
-              <p style={{ fontSize: '11px', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
+              <p style={{ fontSize: '11px', color: tokens.colors.black, fontFamily: tokens.fontMono, margin: '4px 0 0 0', letterSpacing: '0.05em' }}>
                 <DecryptedText text="versteckte Kosten" speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={7800} />
               </p>
             </div>
