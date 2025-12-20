@@ -1247,15 +1247,16 @@ export default function App() {
           </h1>
         </FadeIn>
 
+        </div>
 
+        {/* Button bottom right - outside content wrapper */}
         <FadeIn delay={600} isActive={activeSection === 1}>
-          <div style={{ display: "flex", alignItems: "center", gap: "32px", marginTop: "20px" }}>
+          <div style={{ position: "absolute", bottom: "60px", right: "80px", zIndex: 10 }}>
             <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: "100px" }}>
               <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: "16px 40px", backgroundColor: "transparent", color: tokens.colors.burgundy, border: "none", borderRadius: "100px", fontSize: "12px", fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: "0.1em", cursor: "none", textTransform: "uppercase" }}>Kontakt</button>
             </ElectricBorder>
-            <p style={{ fontSize: "11px", letterSpacing: "0.2em", color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2025</p>
           </div>
-        </FadeIn></div>
+        </FadeIn>
       </section>      {/* ABOUT - Section 2: Cost of Vacancy */}
       <section style={{ 
         ...cardBase,
