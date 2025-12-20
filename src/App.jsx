@@ -1253,7 +1253,7 @@ export default function App() {
         <FadeIn delay={600} isActive={activeSection === 1}>
           <div style={{ position: "absolute", bottom: "60px", right: "80px", zIndex: 10 }}>
             <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: "100px" }}>
-              <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: "16px 40px", backgroundColor: "transparent", color: tokens.colors.burgundy, border: "none", borderRadius: "100px", fontSize: "12px", fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: "0.1em", cursor: "none", textTransform: "uppercase" }}>Kontakt</button>
+              <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: "16px 40px", backgroundColor: tokens.colors.burgundy, color: tokens.colors.white, border: "none", borderRadius: "100px", fontSize: "12px", fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: "0.1em", cursor: "none", textTransform: "uppercase" }}>Kontakt</button>
             </ElectricBorder>
           </div>
         </FadeIn>
