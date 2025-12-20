@@ -238,6 +238,179 @@ const CostOfVacancyCalculator = () => {
 
 
 
+
+// ============================================
+// BLOG SCROLL LIST (Auto + Manual Drag)
+// ============================================
+const BlogScrollList = ({ posts, selectedPost, onSelectPost, hoveredId, onHover, onLeave, isActive }) => {
+  const [offset, setOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [autoScroll, setAutoScroll] = useState(true);
+  const dragStartY = useRef(0);
+  const dragStartOffset = useRef(0);
+  const velocityRef = useRef(0);
+  const lastYRef = useRef(0);
+  const animationRef = useRef(null);
+  const containerRef = useRef(null);
+  const trackRef = useRef(null);
+  
+  const doubledPosts = [...posts, ...posts];
+  const itemHeight = 80; // Approximate height per item
+  const totalHeight = posts.length * itemHeight;
+
+  // Auto scroll
+  useEffect(() => {
+    if (!isActive || isDragging || !autoScroll) return;
+    
+    const interval = setInterval(() => {
+      setOffset(prev => {
+        const newOffset = prev - 0.5;
+        // Reset when we've scrolled through one set
+        if (Math.abs(newOffset) >= totalHeight) {
+          return 0;
+        }
+        return newOffset;
+      });
+    }, 16);
+    
+    return () => clearInterval(interval);
+  }, [isActive, isDragging, autoScroll, totalHeight]);
+
+  // Momentum animation after drag
+  useEffect(() => {
+    if (!isDragging && Math.abs(velocityRef.current) > 0.5) {
+      const animate = () => {
+        velocityRef.current *= 0.95;
+        setOffset(prev => {
+          let newOffset = prev + velocityRef.current;
+          // Wrap around
+          if (newOffset > 0) newOffset = -totalHeight + newOffset;
+          if (newOffset < -totalHeight) newOffset = newOffset + totalHeight;
+          return newOffset;
+        });
+        
+        if (Math.abs(velocityRef.current) > 0.5) {
+          animationRef.current = requestAnimationFrame(animate);
+        } else {
+          // Resume auto scroll after momentum ends
+          setTimeout(() => setAutoScroll(true), 1000);
+        }
+      };
+      animationRef.current = requestAnimationFrame(animate);
+    }
+    
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [isDragging, totalHeight]);
+
+  const handleDragStart = (e) => {
+    if (!isActive) return;
+    setIsDragging(true);
+    setAutoScroll(false);
+    const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+    dragStartY.current = clientY;
+    dragStartOffset.current = offset;
+    lastYRef.current = clientY;
+    velocityRef.current = 0;
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+  };
+
+  const handleDragMove = (e) => {
+    if (!isDragging || !isActive) return;
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    const deltaY = clientY - dragStartY.current;
+    velocityRef.current = (clientY - lastYRef.current) * 0.8;
+    lastYRef.current = clientY;
+    
+    let newOffset = dragStartOffset.current + deltaY;
+    // Wrap around
+    if (newOffset > 0) newOffset = -totalHeight + newOffset;
+    if (newOffset < -totalHeight) newOffset = newOffset + totalHeight;
+    
+    setOffset(newOffset);
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  const handleWheel = (e) => {
+    if (!isActive) return;
+    e.preventDefault();
+    setAutoScroll(false);
+    setOffset(prev => {
+      let newOffset = prev + e.deltaY * 0.5;
+      if (newOffset > 0) newOffset = -totalHeight + newOffset;
+      if (newOffset < -totalHeight) newOffset = newOffset + totalHeight;
+      return newOffset;
+    });
+    // Resume auto scroll after wheel
+    setTimeout(() => setAutoScroll(true), 2000);
+  };
+
+  return (
+    <div 
+      ref={containerRef}
+      onMouseDown={handleDragStart}
+      onMouseMove={handleDragMove}
+      onMouseUp={handleDragEnd}
+      onMouseLeave={handleDragEnd}
+      onTouchStart={handleDragStart}
+      onTouchMove={handleDragMove}
+      onTouchEnd={handleDragEnd}
+      onWheel={handleWheel}
+      style={{ 
+        flex: 1,
+        overflow: 'hidden',
+        maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+        position: 'relative',
+        cursor: isDragging ? 'grabbing' : 'grab',
+        userSelect: 'none',
+      }}
+    >
+      <div 
+        ref={trackRef}
+        style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '28px', 
+          paddingTop: '20px',
+          transform: `translateY(${offset}px)`,
+          transition: isDragging ? 'none' : 'transform 0.1s linear',
+        }}
+      >
+        {doubledPosts.map((post, index) => (
+          <div 
+            key={`${post.id}-${index}`}
+            className="cursor-target"
+            onClick={() => onSelectPost(post)}
+            onMouseEnter={() => onHover(post.id)}
+            onMouseLeave={onLeave}
+            style={{ 
+              cursor: 'pointer',
+              opacity: selectedPost.id === post.id ? 1 : (hoveredId === post.id ? 0.8 : 0.4),
+              transform: selectedPost.id === post.id ? 'translateX(8px)' : 'translateX(0)',
+              transition: 'opacity 0.4s ease, transform 0.4s ease',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+              <span style={{ fontSize: '11px', color: selectedPost.id === post.id ? tokens.colors.accent : tokens.colors.muted, fontFamily: tokens.fontMono, marginTop: '3px', minWidth: '20px' }}>
+                {String((index % posts.length) + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <span style={{ fontSize: '9px', color: tokens.colors.muted, fontFamily: tokens.fontMono, display: 'block', marginBottom: '6px', letterSpacing: '0.1em' }}>{post.category.toUpperCase()}</span>
+                <h3 style={{ fontSize: '15px', fontWeight: selectedPost.id === post.id ? 500 : 400, color: selectedPost.id === post.id ? tokens.colors.white : tokens.colors.mutedLight, margin: 0, lineHeight: 1.4 }}>{post.title}</h3>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // ============================================
 // TALENT CAROUSEL COMPONENT
 // ============================================
@@ -1121,7 +1294,7 @@ export default function App() {
         display: 'grid', 
         gridTemplateColumns: '1fr 1fr',
       }}>
-        {/* Left - Infinite Scroll Blog List */}
+        {/* Left - Infinite Scroll Blog List with Drag */}
         <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 
@@ -1134,57 +1307,15 @@ export default function App() {
           {/* Fixed Header */}
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase', flexShrink: 0, zIndex: 10 }}>04 — Blog</p>
           
-          {/* Infinite Scroll Container */}
-          <div 
-            className="blog-infinite-scroll"
-            style={{ 
-              flex: 1,
-              overflow: 'hidden',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-              position: 'relative',
-            }}
-          >
-            <style>{`
-              @keyframes blogScrollUp {
-                0% { transform: translateY(0); }
-                100% { transform: translateY(-50%); }
-              }
-              .blog-scroll-track {
-                animation: blogScrollUp 30s linear infinite;
-              }
-              .blog-scroll-track:hover {
-                animation-play-state: paused;
-              }
-            `}</style>
-            
-            <div className="blog-scroll-track" style={{ display: 'flex', flexDirection: 'column', gap: '28px', paddingTop: '20px' }}>
-              {/* Double the posts for seamless loop */}
-              {[...CONTENT.blog.posts, ...CONTENT.blog.posts].map((post, index) => (
-                <div 
-                  key={`${post.id}-${index}`}
-                  className="cursor-target"
-                  onClick={() => setSelectedBlogPost(post)}
-                  onMouseEnter={() => setHoveredBlogId(post.id)}
-                  onMouseLeave={() => setHoveredBlogId(null)}
-                  style={{ 
-                    cursor: 'pointer',
-                    opacity: selectedBlogPost.id === post.id ? 1 : (hoveredBlogId === post.id ? 0.8 : 0.4),
-                    transform: selectedBlogPost.id === post.id ? 'translateX(8px)' : 'translateX(0)',
-                    transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-                    <span style={{ fontSize: '11px', color: selectedBlogPost.id === post.id ? tokens.colors.accent : tokens.colors.muted, fontFamily: tokens.fontMono, transition: 'color 0.3s ease', marginTop: '3px', minWidth: '20px' }}>{String((index % CONTENT.blog.posts.length) + 1).padStart(2, '0')}</span>
-                    <div>
-                      <span style={{ fontSize: '9px', color: tokens.colors.muted, fontFamily: tokens.fontMono, display: 'block', marginBottom: '6px', letterSpacing: '0.1em' }}>{post.category.toUpperCase()}</span>
-                      <h3 style={{ fontSize: '15px', fontWeight: selectedBlogPost.id === post.id ? 500 : 400, color: selectedBlogPost.id === post.id ? tokens.colors.white : tokens.colors.mutedLight, margin: 0, transition: 'all 0.3s ease', lineHeight: 1.4 }}>{post.title}</h3>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <BlogScrollList 
+            posts={CONTENT.blog.posts}
+            selectedPost={selectedBlogPost}
+            onSelectPost={setSelectedBlogPost}
+            hoveredId={hoveredBlogId}
+            onHover={setHoveredBlogId}
+            onLeave={() => setHoveredBlogId(null)}
+            isActive={activeSection === 4}
+          />
         </div>
 
         {/* Right - Scrollable Preview */}
