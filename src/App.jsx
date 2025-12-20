@@ -7,17 +7,20 @@ import ElectricBorder from './ElectricBorder';
 // ============================================
 const tokens = {
   colors: {
-    white: '#ffffff',
+    white: '#EFEDE5',
     black: '#0a0a0a',
-    dark: '#111111',
-    darkAlt: '#1a1a1a',
-    accent: '#0098d4',
-    muted: 'rgba(255, 255, 255, 0.6)',
-    mutedLight: 'rgba(255, 255, 255, 0.6)',
-    border: 'rgba(255, 255, 255, 0.08)',
-    navActive: 'rgba(255, 255, 255, 0.15)',
+    dark: '#0a0a0a',
+    darkAlt: '#151413',
+    accent: '#652126',
+    muted: 'rgba(207, 187, 163, 0.5)',
+    mutedLight: '#CFBBA3',
+    border: 'rgba(207, 187, 163, 0.15)',
+    navActive: 'rgba(207, 187, 163, 0.2)',
+    sand: '#CFBBA3',
+    cream: '#EFEDE5',
+    burgundy: '#652126',
   },
-  font: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
+  font: '"JetBrains Mono", "SF Mono", monospace',
   fontMono: '"JetBrains Mono", "SF Mono", monospace',
   easing: {
     hover: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
@@ -1143,7 +1146,7 @@ export default function App() {
         <FadeIn delay={600} isActive={activeSection === 1}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p>
-            <ElectricBorder color="#0098d4" speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}>
+            <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}>
               <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: '#0098d4', border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase' }}>Kontakt</button>
             </ElectricBorder>
           </div>
@@ -1151,7 +1154,7 @@ export default function App() {
       </section>      {/* ABOUT - Section 2: Cost of Vacancy */}
       <section style={{ 
         ...cardBase,
-        backgroundColor: tokens.colors.dark, 
+        backgroundColor: tokens.colors.sand, 
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 2 ? 10 : 1,
         opacity: activeSection === 2 ? 1 : 0,
@@ -1165,16 +1168,16 @@ export default function App() {
             <DecryptedText text="02 — Das Problem" speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={0} />
           </p>
           
-          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: tokens.colors.white, margin: '0 0 28px 0', lineHeight: 1.2, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 400, color: tokens.colors.black, margin: '0 0 28px 0', lineHeight: 1.2, fontFamily: tokens.font, letterSpacing: '-0.02em' }}>
             <DecryptedText text="Jede offene Stelle kostet " speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={800} />
             <span style={{ color: tokens.colors.accent }}><DecryptedText text="bares Geld." speed={120} sequential={false} maxIterations={15} isActive={activeSection === 2} delay={1600} /></span>
           </h2>
           
-          <p style={{ fontSize: '15px', color: tokens.colors.mutedLight, lineHeight: 1.7, margin: '0 0 20px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
+          <p style={{ fontSize: '15px', color: "rgba(10, 10, 10, 0.7)", lineHeight: 1.7, margin: '0 0 20px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
             <DecryptedText text="Während Sie nach dem perfekten Kandidaten suchen, verlieren Sie täglich Produktivität. Ihr Team arbeitet über Kapazität, Projekte verzögern sich, und die besten Talente gehen zur Konkurrenz." speed={100} sequential={false} maxIterations={18} isActive={activeSection === 2} delay={2400} />
           </p>
           
-          <p style={{ fontSize: '15px', color: tokens.colors.muted, lineHeight: 1.7, margin: '0 0 36px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
+          <p style={{ fontSize: '15px', color: "rgba(10, 10, 10, 0.5)", lineHeight: 1.7, margin: '0 0 36px 0', fontFamily: tokens.font, maxWidth: '540px' }}>
             <DecryptedText text="Die durchschnittliche Tech-Position bleibt 42 Tage unbesetzt. Bei Senior-Rollen oft 3-6 Monate. Rechnen Sie selbst." speed={100} sequential={false} maxIterations={18} isActive={activeSection === 2} delay={4200} />
           </p>
 
@@ -1229,7 +1232,7 @@ export default function App() {
       {/* EXPERTISE - Section 3 */}
       <section style={{ 
         ...cardBase, 
-        backgroundColor: tokens.colors.accent, 
+        backgroundColor: tokens.colors.black, 
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 3 ? 10 : 1,
         opacity: activeSection === 3 ? 1 : 0,
@@ -1347,7 +1350,7 @@ export default function App() {
       {/* PODCAST - Section 5 */}
       <section style={{ 
         ...cardBase, 
-        backgroundColor: tokens.colors.black, 
+        backgroundColor: tokens.colors.sand, 
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 5 ? 10 : 1,
         opacity: activeSection === 5 ? 1 : 0,
@@ -1362,10 +1365,10 @@ export default function App() {
         </h2>
         <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap' }}>
           {CONTENT.podcast.topics.map((topic) => (
-            <LineDrawLink key={topic} href="#" className="cursor-target" style={{ fontSize: '14px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono, padding: '12px 0' }}>{topic}</LineDrawLink>
+            <LineDrawLink key={topic} href="#" className="cursor-target" style={{ fontSize: '14px', color: "rgba(10, 10, 10, 0.6)", fontFamily: tokens.fontMono, padding: '12px 0' }}>{topic}</LineDrawLink>
           ))}
         </div>
-        <div className="cursor-target" style={{ marginTop: '80px', width: '100%', maxWidth: '400px', aspectRatio: '16/9', backgroundColor: tokens.colors.dark, borderRadius: '12px', border: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: tokens.colors.muted, fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>VIDEO LOOP</div>
+        <div className="cursor-target" style={{ marginTop: '80px', width: '100%', maxWidth: '400px', aspectRatio: '16/9', backgroundColor: "rgba(10, 10, 10, 0.08)", borderRadius: '12px', border: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: "rgba(10, 10, 10, 0.4)", fontFamily: tokens.fontMono, letterSpacing: '0.1em' }}>VIDEO LOOP</div>
       </section>
 
       {/* CONTACT - Section 6 */}
@@ -1389,7 +1392,7 @@ export default function App() {
             <LineDrawLink href={`https://${CONTENT.contact.linkedin}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>LinkedIn</LineDrawLink>
             <LineDrawLink href={`mailto:${CONTENT.contact.email}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>Email</LineDrawLink>
           </div>
-          <ElectricBorder color="#0098d4" speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}><button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: '#0098d4', border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button></ElectricBorder>
+          <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}><button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: '#0098d4', border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button></ElectricBorder>
         </div>
       </section>
     </div>
