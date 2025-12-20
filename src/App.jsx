@@ -1121,7 +1121,7 @@ export default function App() {
         display: 'grid', 
         gridTemplateColumns: '1fr 1fr',
       }}>
-        {/* Left - Article List with Fade Mask */}
+        {/* Left - Infinite Scroll Blog List */}
         <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 
@@ -1129,46 +1129,53 @@ export default function App() {
           borderRight: `1px dashed ${tokens.colors.border}`,
           height: '100%',
           overflow: 'hidden',
+          position: 'relative',
         }}>
           {/* Fixed Header */}
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase', flexShrink: 0 }}>04 — Blog</p>
+          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase', flexShrink: 0, zIndex: 10 }}>04 — Blog</p>
           
-          {/* Scrollable List with Fade Mask */}
+          {/* Infinite Scroll Container */}
           <div 
-            className="blog-list-scroll"
+            className="blog-infinite-scroll"
             style={{ 
               flex: 1,
-              overflowY: 'auto',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
-              paddingTop: '24px',
-              paddingBottom: '24px',
+              overflow: 'hidden',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+              position: 'relative',
             }}
           >
             <style>{`
-              .blog-list-scroll::-webkit-scrollbar { width: 3px; }
-              .blog-list-scroll::-webkit-scrollbar-track { background: transparent; }
-              .blog-list-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
-              .blog-list-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+              @keyframes blogScrollUp {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(-50%); }
+              }
+              .blog-scroll-track {
+                animation: blogScrollUp 30s linear infinite;
+              }
+              .blog-scroll-track:hover {
+                animation-play-state: paused;
+              }
             `}</style>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {CONTENT.blog.posts.map((post, index) => (
+            <div className="blog-scroll-track" style={{ display: 'flex', flexDirection: 'column', gap: '28px', paddingTop: '20px' }}>
+              {/* Double the posts for seamless loop */}
+              {[...CONTENT.blog.posts, ...CONTENT.blog.posts].map((post, index) => (
                 <div 
-                  key={post.id}
+                  key={`${post.id}-${index}`}
                   className="cursor-target"
                   onClick={() => setSelectedBlogPost(post)}
                   onMouseEnter={() => setHoveredBlogId(post.id)}
                   onMouseLeave={() => setHoveredBlogId(null)}
                   style={{ 
                     cursor: 'pointer',
-                    opacity: selectedBlogPost.id === post.id ? 1 : (hoveredBlogId === post.id ? 0.7 : 0.35),
+                    opacity: selectedBlogPost.id === post.id ? 1 : (hoveredBlogId === post.id ? 0.8 : 0.4),
                     transform: selectedBlogPost.id === post.id ? 'translateX(8px)' : 'translateX(0)',
                     transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-                    <span style={{ fontSize: '11px', color: selectedBlogPost.id === post.id ? tokens.colors.accent : tokens.colors.muted, fontFamily: tokens.fontMono, transition: 'color 0.3s ease', marginTop: '3px', minWidth: '20px' }}>{String(index + 1).padStart(2, '0')}</span>
+                    <span style={{ fontSize: '11px', color: selectedBlogPost.id === post.id ? tokens.colors.accent : tokens.colors.muted, fontFamily: tokens.fontMono, transition: 'color 0.3s ease', marginTop: '3px', minWidth: '20px' }}>{String((index % CONTENT.blog.posts.length) + 1).padStart(2, '0')}</span>
                     <div>
                       <span style={{ fontSize: '9px', color: tokens.colors.muted, fontFamily: tokens.fontMono, display: 'block', marginBottom: '6px', letterSpacing: '0.1em' }}>{post.category.toUpperCase()}</span>
                       <h3 style={{ fontSize: '15px', fontWeight: selectedBlogPost.id === post.id ? 500 : 400, color: selectedBlogPost.id === post.id ? tokens.colors.white : tokens.colors.mutedLight, margin: 0, transition: 'all 0.3s ease', lineHeight: 1.4 }}>{post.title}</h3>
@@ -1178,21 +1185,13 @@ export default function App() {
               ))}
             </div>
           </div>
-
-          {/* Fixed Footer */}
-          <div className="cursor-target" style={{ marginTop: '24px', paddingTop: '20px', borderTop: `1px dashed ${tokens.colors.border}`, display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', opacity: 0.5, transition: 'opacity 0.3s ease', flexShrink: 0 }}>
-            <span style={{ fontSize: '11px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono, letterSpacing: '0.05em' }}>Alle 20 Artikel</span>
-            <span style={{ fontSize: '14px', color: tokens.colors.accent }}>→</span>
-          </div>
         </div>
 
         {/* Right - Scrollable Preview */}
         <div style={{ overflowY: 'auto', padding: '80px' }} className="blog-scroll">
           <style>{`
-            .blog-scroll::-webkit-scrollbar { width: 4px; }
-            .blog-scroll::-webkit-scrollbar-track { background: transparent; }
-            .blog-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
-            .blog-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+            .blog-scroll::-webkit-scrollbar { display: none; }
+            .blog-scroll { -ms-overflow-style: none; scrollbar-width: none; }
           `}</style>
           
           {/* Sticky Header */}
