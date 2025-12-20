@@ -1202,9 +1202,15 @@ export default function App() {
         ...sectionPadding, position: "relative", overflow: "hidden" 
       }}>
         {/* Background Video */}
-        <video autoPlay loop muted playsInline style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", minWidth: "100%", minHeight: "100%", width: "auto", height: "auto", objectFit: "cover", zIndex: 0, opacity: 0.4 }}>
-          <source src="/Drone_Video_Generation.mp4" type="video/mp4" />
-        </video>
+        {/* Vimeo Background Video */}
+        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "hidden", zIndex: 0 }}>
+          <iframe
+            src="https://player.vimeo.com/video/1148318879?background=1&autoplay=1&muted=1&loop=1&byline=0&title=0"
+            style={{ position: "absolute", top: "50%", left: "50%", width: "177.78vh", height: "100vh", minWidth: "100%", minHeight: "56.25vw", transform: "translate(-50%, -50%)", opacity: 0.4 }}
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+          />
+        </div>
         {/* Dark overlay */}
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(10, 10, 10, 0.5)", zIndex: 1 }} />
         <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1 }}><FadeIn delay={200} isActive={activeSection === 1}>
