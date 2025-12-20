@@ -23,3 +23,24 @@ body {
   width: 0px;
   background: transparent;
 }
+
+/* Slider thumb styling */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #652126;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #652126;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+}

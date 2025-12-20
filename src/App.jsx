@@ -144,10 +144,10 @@ const CostOfVacancyCalculator = () => {
   }, [totalCost]);
 
   const breakdown = [
-    { label: 'Produktivitätsverlust', percent: 50, color: tokens.colors.burgundy },
-    { label: 'Überstunden Team', percent: 20, color: tokens.colors.sand },
-    { label: 'Recruiting intern', percent: 15, color: 'rgba(219, 214, 204, 0.6)' },
-    { label: 'Opportunitätskosten', percent: 15, color: 'rgba(219, 214, 204, 0.4)' },
+    { label: 'Produktivitätsverlust', percent: 50, color: tokens.colors.white },
+    { label: 'Überstunden Team', percent: 20, color: tokens.colors.white },
+    { label: 'Recruiting intern', percent: 15, color: 'rgba(255, 255, 255, 0.7)' },
+    { label: 'Opportunitätskosten', percent: 15, color: 'rgba(255, 255, 255, 0.5)' },
   ];
 
   return (
@@ -213,7 +213,7 @@ const CostOfVacancyCalculator = () => {
         <div style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', lineHeight: 1 }}>
           {displayedTotal.toLocaleString('de-DE')}<span style={{ fontSize: '18px', color: 'rgba(255,255,255,0.5)', marginLeft: '4px' }}>€</span>
         </div>
-        <p style={{ fontSize: '11px', color: tokens.colors.burgundy, fontFamily: tokens.fontMono, margin: '6px 0 0 0' }}>+{weeklyLoss.toLocaleString('de-DE')} € / Woche</p>
+        <p style={{ fontSize: '11px', color: tokens.colors.white, fontFamily: tokens.fontMono, margin: '6px 0 0 0' }}>+{weeklyLoss.toLocaleString('de-DE')} € / Woche</p>
       </div>
 
       <div style={{ marginBottom: '16px' }}>
