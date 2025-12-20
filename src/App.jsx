@@ -13,10 +13,10 @@ const tokens = {
     darkAlt: '#151413',
     accent: '#652126',
     muted: 'rgba(207, 187, 163, 0.5)',
-    mutedLight: '#CFBBA3',
+    mutedLight: '#DBD6CC',
     border: 'rgba(207, 187, 163, 0.15)',
     navActive: 'rgba(207, 187, 163, 0.2)',
-    sand: '#CFBBA3',
+    sand: '#DBD6CC',
     cream: '#EFEDE5',
     burgundy: '#652126',
   },
@@ -144,10 +144,10 @@ const CostOfVacancyCalculator = () => {
   }, [totalCost]);
 
   const breakdown = [
-    { label: 'Produktivitätsverlust', percent: 50, color: '#0098d4' },
-    { label: 'Überstunden Team', percent: 20, color: 'rgba(255,255,255,0.6)' },
-    { label: 'Recruiting intern', percent: 15, color: 'rgba(255,255,255,0.4)' },
-    { label: 'Opportunitätskosten', percent: 15, color: 'rgba(255,255,255,0.3)' },
+    { label: 'Produktivitätsverlust', percent: 50, color: tokens.colors.burgundy },
+    { label: 'Überstunden Team', percent: 20, color: tokens.colors.sand },
+    { label: 'Recruiting intern', percent: 15, color: 'rgba(219, 214, 204, 0.6)' },
+    { label: 'Opportunitätskosten', percent: 15, color: 'rgba(219, 214, 204, 0.4)' },
   ];
 
   return (
@@ -203,7 +203,7 @@ const CostOfVacancyCalculator = () => {
           <span style={{ fontSize: '13px', color: tokens.colors.white, fontFamily: tokens.fontMono, fontWeight: 600 }}>{months} {months === 1 ? 'Monat' : 'Monate'}</span>
         </div>
         <input id="months-input" type="range" min="1" max="12" value={months} onChange={(e) => setMonths(Number(e.target.value))} style={{
-          width: '100%', height: '4px', borderRadius: '2px', background: 'linear-gradient(to right, #0098d4 ' + ((months - 1) / 11 * 100) + '%, rgba(0,0,0,0.3) ' + ((months - 1) / 11 * 100) + '%)',
+          width: '100%', height: '4px', borderRadius: '2px', background: `linear-gradient(to right, ${tokens.colors.burgundy} ${((months - 1) / 11 * 100)}%, rgba(0,0,0,0.3) ${((months - 1) / 11 * 100)}%)`,
           appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer',
         }} />
       </div>
@@ -213,7 +213,7 @@ const CostOfVacancyCalculator = () => {
         <div style={{ fontSize: '36px', fontWeight: 300, color: tokens.colors.white, fontFamily: tokens.font, letterSpacing: '-0.03em', lineHeight: 1 }}>
           {displayedTotal.toLocaleString('de-DE')}<span style={{ fontSize: '18px', color: 'rgba(255,255,255,0.5)', marginLeft: '4px' }}>€</span>
         </div>
-        <p style={{ fontSize: '11px', color: '#0098d4', fontFamily: tokens.fontMono, margin: '6px 0 0 0' }}>+{weeklyLoss.toLocaleString('de-DE')} € / Woche</p>
+        <p style={{ fontSize: '11px', color: tokens.colors.burgundy, fontFamily: tokens.fontMono, margin: '6px 0 0 0' }}>+{weeklyLoss.toLocaleString('de-DE')} € / Woche</p>
       </div>
 
       <div style={{ marginBottom: '16px' }}>
@@ -1147,7 +1147,7 @@ export default function App() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p>
             <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}>
-              <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: '#0098d4', border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase' }}>Kontakt</button>
+              <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: tokens.colors.burgundy, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase' }}>Kontakt</button>
             </ElectricBorder>
           </div>
         </FadeIn>
@@ -1392,7 +1392,7 @@ export default function App() {
             <LineDrawLink href={`https://${CONTENT.contact.linkedin}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>LinkedIn</LineDrawLink>
             <LineDrawLink href={`mailto:${CONTENT.contact.email}`} className="cursor-target" style={{ fontSize: '12px', color: tokens.colors.mutedLight, fontFamily: tokens.fontMono }}>Email</LineDrawLink>
           </div>
-          <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}><button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: '#0098d4', border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button></ElectricBorder>
+          <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}><button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: tokens.colors.burgundy, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase', transition: `transform ${tokens.timing.fast} ${tokens.easing.hover}` }}>Kontakt</button></ElectricBorder>
         </div>
       </section>
     </div>
