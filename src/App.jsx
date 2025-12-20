@@ -1219,13 +1219,13 @@ export default function App() {
         
         <FadeIn delay={400} isActive={activeSection === 1}>
           <h1 style={{ 
-            fontSize: 'clamp(36px, 6vw, 72px)', 
+            fontSize: 'clamp(32px, 4.5vw, 56px)', 
             fontWeight: 400, 
             lineHeight: 1.1, 
             margin: 0, 
             fontFamily: tokens.font,
           }}>
-            {/* Zeile 1: Ich bin Headhunter, spezialisiert auf */}
+            {/* Zeile 1: Ich bin Headhunter, spezialisiert */}
             <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
               <DecryptedText text="Ich bin" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={0} />
             </span>{' '}
@@ -1233,10 +1233,13 @@ export default function App() {
               <DecryptedText text="Headhunter," speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={200} />
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
-              <DecryptedText text="spezialisiert auf" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={400} />
+              <DecryptedText text="spezialisiert" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={400} />
             </span>
             <br />
-            {/* Zeile 2: Tech & Engineering */}
+            {/* Zeile 2: auf Tech & Engineering */}
+            <span style={{ color: tokens.colors.muted, fontWeight: 300, fontStyle: 'italic' }}>
+              <DecryptedText text="auf" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={500} />
+            </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
               <DecryptedText text="Tech & Engineering" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={600} />
             </span>
