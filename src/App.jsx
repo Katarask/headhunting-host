@@ -1227,32 +1227,33 @@ export default function App() {
             maxWidth: '1100px',
           }}>
             <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
-              Ich bin
+              <DecryptedText text="Ich bin" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={0} />
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
-              Headhunter,
+              <DecryptedText text="Headhunter," speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={200} />
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
-              spezialisiert auf
+              <DecryptedText text="spezialisiert auf" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={400} />
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
-              Tech & Engineering
+              <DecryptedText text="Tech & Engineering" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={600} />
             </span>{' '}
             <span style={{ color: tokens.colors.muted, fontWeight: 300 }}>
-              in
+              <DecryptedText text="in" speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={800} />
             </span>{' '}
             <span className="cursor-target" style={{ color: tokens.colors.white, fontWeight: 600 }}>
-              München.
+              <DecryptedText text="München." speed={80} sequential={false} maxIterations={12} isActive={activeSection === 1} delay={1000} />
             </span>
           </h1>
         </FadeIn>
 
+
         <FadeIn delay={600} isActive={activeSection === 1}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2024</p>
-            {/*             <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px' }}>
-              <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: tokens.colors.burgundy, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase' }}>Kontakt</button>
-            </ElectricBorder> */}
+          <div style={{ display: "flex", alignItems: "center", gap: "32px", marginTop: "20px" }}>
+            <ElectricBorder color={tokens.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: "100px" }}>
+              <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: "16px 40px", backgroundColor: "transparent", color: tokens.colors.burgundy, border: "none", borderRadius: "100px", fontSize: "12px", fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: "0.1em", cursor: "none", textTransform: "uppercase" }}>Kontakt</button>
+            </ElectricBorder>
+            <p style={{ fontSize: "11px", letterSpacing: "0.2em", color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0 }}>© 2025</p>
           </div>
         </FadeIn></div>
       </section>      {/* ABOUT - Section 2: Cost of Vacancy */}
