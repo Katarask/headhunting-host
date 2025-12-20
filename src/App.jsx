@@ -237,6 +237,188 @@ const CostOfVacancyCalculator = () => {
 };
 
 
+
+// ============================================
+// TALENT CAROUSEL COMPONENT
+// ============================================
+const CANDIDATES = [
+  { id: 1, position: 'Senior Backend Developer', skills: ['Python', 'AWS', 'Kubernetes', 'PostgreSQL'], salary: '75-85k', availability: 'Ab sofort', experience: '6 Jahre' },
+  { id: 2, position: 'DevOps Engineer', skills: ['Terraform', 'Docker', 'CI/CD', 'Azure'], salary: '80-90k', availability: 'Q1 2025', experience: '5 Jahre' },
+  { id: 3, position: 'Frontend Developer', skills: ['React', 'TypeScript', 'Next.js', 'Tailwind'], salary: '65-75k', availability: 'Ab sofort', experience: '4 Jahre' },
+  { id: 4, position: 'Engineering Manager', skills: ['Team Lead', 'Agile', 'System Design', 'Hiring'], salary: '95-110k', availability: 'Q2 2025', experience: '8 Jahre' },
+  { id: 5, position: 'ML Engineer', skills: ['Python', 'TensorFlow', 'MLOps', 'Data Pipelines'], salary: '85-100k', availability: 'Ab sofort', experience: '5 Jahre' },
+  { id: 6, position: 'Full Stack Developer', skills: ['Node.js', 'React', 'MongoDB', 'GraphQL'], salary: '70-80k', availability: 'Januar 2025', experience: '4 Jahre' },
+  { id: 7, position: 'Cloud Architect', skills: ['AWS', 'GCP', 'Terraform', 'Security'], salary: '100-120k', availability: 'Q1 2025', experience: '9 Jahre' },
+  { id: 8, position: 'iOS Developer', skills: ['Swift', 'SwiftUI', 'Objective-C', 'CoreData'], salary: '70-85k', availability: 'Ab sofort', experience: '5 Jahre' },
+];
+
+const CandidateCard = ({ candidate, angle, isCenter }) => {
+  const radians = (angle * Math.PI) / 180;
+  const radius = 320;
+  const translateX = Math.sin(radians) * radius;
+  const translateZ = Math.cos(radians) * radius - radius;
+  const visibility = Math.cos(radians);
+  const opacity = Math.max(0, Math.min(1, visibility * 1.3));
+  const blur = isCenter ? 0 : Math.max(0, (1 - visibility) * 5);
+  const scale = isCenter ? 1 : 0.85 + visibility * 0.1;
+  const zIndex = Math.round(visibility * 100);
+
+  return (
+    <div style={{
+      position: 'absolute', left: '50%', top: '50%',
+      transform: `translate(-50%, -50%) translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${angle}deg) scale(${scale})`,
+      opacity, filter: `blur(${blur}px)`, zIndex,
+      transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      pointerEvents: 'none', backfaceVisibility: 'hidden',
+    }}>
+      <div style={{
+        width: '260px', backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        borderRadius: '14px', padding: '20px',
+        border: isCenter ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.05)',
+        boxShadow: isCenter ? '0 20px 60px rgba(0,0,0,0.4)' : '0 10px 30px rgba(0,0,0,0.3)',
+        fontFamily: tokens.font,
+      }}>
+        <div style={{ marginBottom: '14px' }}>
+          <p style={{ fontSize: '9px', letterSpacing: '0.2em', color: tokens.colors.white, fontFamily: tokens.fontMono, margin: '0 0 4px 0', textTransform: 'uppercase', opacity: 0.6 }}>
+            Kandidat #{candidate.id}
+          </p>
+          <h3 style={{ fontSize: '15px', fontWeight: 600, color: tokens.colors.white, margin: 0, letterSpacing: '-0.02em' }}>
+            {candidate.position}
+          </h3>
+        </div>
+        <div style={{ marginBottom: '14px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+            {candidate.skills.slice(0, 3).map((skill, i) => (
+              <span key={i} style={{ fontSize: '9px', padding: '2px 6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '100px', color: 'rgba(255,255,255,0.7)', fontFamily: tokens.fontMono }}>{skill}</span>
+            ))}
+            {candidate.skills.length > 3 && <span style={{ fontSize: '9px', padding: '2px 6px', color: 'rgba(255,255,255,0.4)', fontFamily: tokens.fontMono }}>+{candidate.skills.length - 3}</span>}
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          <div>
+            <p style={{ fontSize: '8px', color: 'rgba(255,255,255,0.4)', fontFamily: tokens.fontMono, letterSpacing: '0.1em', margin: '0 0 2px 0' }}>GEHALT</p>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: tokens.colors.white, margin: 0 }}>{candidate.salary}</p>
+          </div>
+          <div>
+            <p style={{ fontSize: '8px', color: 'rgba(255,255,255,0.4)', fontFamily: tokens.fontMono, letterSpacing: '0.1em', margin: '0 0 2px 0' }}>VERFÜGBAR</p>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: tokens.colors.white, margin: 0 }}>{candidate.availability}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TalentCarousel = ({ isActive }) => {
+  const [rotation, setRotation] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartX = useRef(0);
+  const dragStartRotation = useRef(0);
+  const velocityRef = useRef(0);
+  const lastXRef = useRef(0);
+  const animationRef = useRef(null);
+
+  const anglePerCard = 360 / CANDIDATES.length;
+  const normalizedRotation = (((-rotation % 360) + 360) % 360);
+  const activeIndex = Math.round(normalizedRotation / anglePerCard) % CANDIDATES.length;
+  const activeCandidate = CANDIDATES[activeIndex];
+
+  useEffect(() => {
+    if (!isDragging && Math.abs(velocityRef.current) > 0.1) {
+      const animate = () => {
+        velocityRef.current *= 0.95;
+        setRotation(prev => prev + velocityRef.current);
+        if (Math.abs(velocityRef.current) > 0.1) {
+          animationRef.current = requestAnimationFrame(animate);
+        }
+      };
+      animationRef.current = requestAnimationFrame(animate);
+    }
+    return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current); };
+  }, [isDragging]);
+
+  const handleDragStart = (e) => {
+    if (!isActive) return;
+    setIsDragging(true);
+    const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    dragStartX.current = clientX;
+    dragStartRotation.current = rotation;
+    lastXRef.current = clientX;
+    velocityRef.current = 0;
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+  };
+
+  const handleDragMove = (e) => {
+    if (!isDragging || !isActive) return;
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const deltaX = clientX - dragStartX.current;
+    velocityRef.current = (clientX - lastXRef.current) * 0.3;
+    lastXRef.current = clientX;
+    setRotation(dragStartRotation.current + (deltaX * 0.4));
+  };
+
+  const handleDragEnd = () => setIsDragging(false);
+
+  const handleWheel = (e) => {
+    if (!isActive) return;
+    e.preventDefault();
+    setRotation(prev => prev - e.deltaY * 0.3);
+  };
+
+  const getAngle = (index) => {
+    const baseAngle = index * anglePerCard;
+    let angle = (baseAngle + rotation) % 360;
+    if (angle > 180) angle -= 360;
+    if (angle < -180) angle += 360;
+    return angle;
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '40px 20px' }}>
+      <div
+        onMouseDown={handleDragStart}
+        onMouseMove={handleDragMove}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+        onTouchStart={handleDragStart}
+        onTouchMove={handleDragMove}
+        onTouchEnd={handleDragEnd}
+        onWheel={handleWheel}
+        style={{
+          position: 'relative', width: '100%', maxWidth: '600px', height: '340px',
+          cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none',
+          perspective: '800px', perspectiveOrigin: 'center center',
+        }}
+      >
+        <div style={{ position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d' }}>
+          {CANDIDATES.map((candidate, index) => {
+            const angle = getAngle(index);
+            const isCenter = Math.abs(angle) < anglePerCard / 2;
+            if (Math.abs(angle) > 90) return null;
+            return <CandidateCard key={candidate.id} candidate={candidate} angle={angle} isCenter={isCenter} />;
+          })}
+        </div>
+      </div>
+      <div style={{ marginTop: '30px', textAlign: 'center' }}>
+        <ElectricBorder color={tokens.colors.white} speed={1.5} chaos={0.3} thickness={2} style={{ borderRadius: '100px' }}>
+          <button
+            onClick={() => window.location.href = `mailto:${CONTENT.contact.email}?subject=Anfrage: ${activeCandidate.position} (Kandidat %23${activeCandidate.id})`}
+            style={{
+              padding: '14px 36px', backgroundColor: 'transparent', color: tokens.colors.white, border: 'none',
+              fontSize: '11px', fontWeight: 600, fontFamily: tokens.fontMono, letterSpacing: '0.1em',
+              cursor: 'pointer', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px',
+            }}
+          >
+            <span style={{ opacity: 0.6 }}>#{activeCandidate.id}</span> Profil Anfragen
+          </button>
+        </ElectricBorder>
+        <p style={{ marginTop: '12px', fontSize: '11px', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono }}>{activeCandidate.position}</p>
+      </div>
+    </div>
+  );
+};
+
+
 // ============================================
 const TargetCursor = ({
   targetSelector = '.cursor-target',
@@ -880,32 +1062,48 @@ export default function App() {
         opacity: activeSection === 3 ? 1 : 0,
         pointerEvents: activeSection === 3 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        display: 'flex', flexDirection: 'column',
       }}>
         <Marquee items={CONTENT.marquee.items} />
         <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          padding: '60px 80px 60px 120px', 
-          flex: 1, 
-          justifyContent: 'center',
+          display: 'grid', 
+          gridTemplateColumns: '1fr 1fr',
+          flex: 1,
         }}>
-          <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, margin: '0 0 48px 0', textTransform: 'uppercase' }}>03 — Was ich mache</p>
-          {CONTENT.expertise.words.map((word, i) => (
-            <span key={word} className="cursor-target" style={{ 
-              fontSize: 'clamp(48px, 10vw, 120px)', 
-              fontWeight: 400, 
-              color: `rgba(255, 255, 255, ${getExpertiseOpacity(i)})`, 
-              fontFamily: tokens.font, 
-              letterSpacing: '-0.03em', 
-              lineHeight: 1.0, 
-              display: 'block',
-              marginLeft: '-4px',
-            }}>
-              <DecryptedText text={word} speed={60} useJobTitles={true} isActive={activeSection === 3} delay={i * 150} />
-            </span>
-          ))}
+          {/* Left - Expertise Words */}
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            padding: '60px 40px 60px 120px', 
+            justifyContent: 'center',
+          }}>
+            <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.5)', fontFamily: tokens.fontMono, margin: '0 0 48px 0', textTransform: 'uppercase' }}>03 — Was ich mache</p>
+            {CONTENT.expertise.words.map((word, i) => (
+              <span key={word} className="cursor-target" style={{ 
+                fontSize: 'clamp(40px, 7vw, 90px)', 
+                fontWeight: 400, 
+                color: `rgba(255, 255, 255, ${getExpertiseOpacity(i)})`, 
+                fontFamily: tokens.font, 
+                letterSpacing: '-0.03em', 
+                lineHeight: 1.0, 
+                display: 'block',
+                marginLeft: '-4px',
+              }}>
+                <DecryptedText text={word} speed={60} useJobTitles={true} isActive={activeSection === 3} delay={i * 150} />
+              </span>
+            ))}
+          </div>
+          
+          {/* Right - Talent Carousel */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            borderLeft: '1px solid rgba(255,255,255,0.1)',
+          }}>
+            <TalentCarousel isActive={activeSection === 3} />
+          </div>
         </div>
         <Marquee items={[...CONTENT.marquee.items].reverse()} />
       </section>
