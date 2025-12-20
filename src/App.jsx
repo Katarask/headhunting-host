@@ -1199,9 +1199,15 @@ export default function App() {
         pointerEvents: activeSection === 1 ? 'auto' : 'none',
         transition: 'opacity 0.8s ease',
         display: 'flex', flexDirection: 'column', justifyContent: 'space-between', 
-        ...sectionPadding 
+        ...sectionPadding, position: "relative", overflow: "hidden" 
       }}>
-        <FadeIn delay={200} isActive={activeSection === 1}>
+        {/* Background Video */}
+        <video autoPlay loop muted playsInline style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", minWidth: "100%", minHeight: "100%", width: "auto", height: "auto", objectFit: "cover", zIndex: 0, opacity: 0.4 }}>
+          <source src="/Drone_Video_Generation.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay */}
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(10, 10, 10, 0.5)", zIndex: 1 }} />
+        <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1 }}><FadeIn delay={200} isActive={activeSection === 1}>
           <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>01</p>
         </FadeIn>
         
@@ -1242,7 +1248,7 @@ export default function App() {
               <button className="cursor-target" onClick={() => window.location.href = `mailto:${CONTENT.contact.email}`} style={{ padding: '20px 48px', backgroundColor: 'transparent', color: tokens.colors.burgundy, border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 500, fontFamily: tokens.fontMono, letterSpacing: '0.1em', cursor: 'none', textTransform: 'uppercase' }}>Kontakt</button>
             </ElectricBorder>
           </div>
-        </FadeIn>
+        </FadeIn></div>
       </section>      {/* ABOUT - Section 2: Cost of Vacancy */}
       <section style={{ 
         ...cardBase,
