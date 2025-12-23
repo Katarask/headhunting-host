@@ -586,7 +586,11 @@ const TalentCarousel = ({ isActive }) => {
 // ============================================
 // HEADER - Navigation with Terminal Breadcrumb (like Landing Pages)
 // ============================================
-const Header = () => {
+const Header = ({ currentPage = 'home' }) => {
+  const isHome = currentPage === 'home';
+  const isCOV = currentPage === 'cost-of-vacancy';
+  const isAS = currentPage === 'active-sourcing';
+
   return (
     <header style={{
       position: 'fixed',
@@ -601,15 +605,16 @@ const Header = () => {
       background: 'transparent',
     }}>
       {/* Logo / Name */}
-      <div style={{
+      <Link to="/" className="cursor-target" style={{
         fontFamily: tokens.font,
         fontSize: '11px',
         fontWeight: 500,
         color: tokens.colors.white,
         letterSpacing: '0.15em',
+        textDecoration: 'none',
       }}>
         DENIZ TULAY
-      </div>
+      </Link>
 
       {/* Terminal Breadcrumb - Center */}
       <div style={{
@@ -627,18 +632,25 @@ const Header = () => {
           background: tokens.colors.burgundy,
           boxShadow: `0 0 8px ${tokens.colors.burgundy}`,
         }} />
-        <span style={{ color: tokens.colors.burgundy }}>~/recruiting</span>
-        <span style={{ color: tokens.colors.muted }}>/</span>
-        <Link to="/cost-of-vacancy" className="cursor-target" style={{
-          color: tokens.colors.muted,
+        <Link to="/" className="cursor-target" style={{
+          color: isHome ? tokens.colors.burgundy : tokens.colors.muted,
           textDecoration: 'none',
           transition: 'color 0.2s',
+          fontWeight: isHome ? 500 : 400,
+        }}>~home</Link>
+        <span style={{ color: tokens.colors.muted }}>/</span>
+        <Link to="/cost-of-vacancy" className="cursor-target" style={{
+          color: isCOV ? tokens.colors.burgundy : tokens.colors.muted,
+          textDecoration: 'none',
+          transition: 'color 0.2s',
+          fontWeight: isCOV ? 500 : 400,
         }}>cost-of-vacancy</Link>
         <span style={{ color: tokens.colors.muted }}>/</span>
         <Link to="/active-sourcing" className="cursor-target" style={{
-          color: tokens.colors.muted,
+          color: isAS ? tokens.colors.burgundy : tokens.colors.muted,
           textDecoration: 'none',
           transition: 'color 0.2s',
+          fontWeight: isAS ? 500 : 400,
         }}>active-sourcing</Link>
       </div>
 
