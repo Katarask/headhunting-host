@@ -42,13 +42,17 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Notion API error:', errorData);
-      throw new Error('Notion API error');
+      console.error('Notion API error:', JSON.stringify(errorData, null, 2));
+      return res.status(500).json({
+        error: 'Notion API error',
+        details: errorData.message || 'Unknown error',
+        code: errorData.code
+      });
     }
 
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Contact form error:', error);
-    res.status(500).json({ error: 'Failed to save contact' });
+    console.error('Contact form error:', error.message);
+    res.status(500).json({ error: 'Failed to save contact', details: error.message });
   }
 }
