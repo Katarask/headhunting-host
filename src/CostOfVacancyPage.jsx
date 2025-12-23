@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import TargetCursor from './TargetCursor';
 import ElectricBorder from './ElectricBorder';
+import Header from './Header';
 import T from './designTokens';
 
 // Decrypted Text
@@ -295,94 +296,6 @@ const GrainOverlay = () => (
   }} />
 );
 
-// Header Navigation with Terminal Breadcrumb
-const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <header style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1000,
-      padding: '20px 8vw',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      background: scrolled ? 'rgba(10, 10, 10, 0.9)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(10px)' : 'none',
-      transition: 'all 0.3s ease',
-    }}>
-      <Link to="/" style={{
-        fontFamily: T.font,
-        fontSize: T.type.label.size,
-        fontWeight: 500,
-        color: T.colors.cream,
-        textDecoration: 'none',
-        letterSpacing: T.type.label.spacing,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-      }}>
-        <span style={{ color: T.colors.burgundy }}>←</span> DENIZ TULAY
-      </Link>
-
-      {/* Terminal Breadcrumb */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        fontFamily: T.font,
-        fontSize: T.type.label.size,
-        letterSpacing: '0.05em',
-      }}>
-        <span style={{
-          width: '6px',
-          height: '6px',
-          borderRadius: '50%',
-          background: T.colors.burgundy,
-          boxShadow: `0 0 8px ${T.colors.burgundy}`,
-        }} />
-        <span style={{ color: T.colors.muted }}>~/</span>
-        <Link to="/active-sourcing" style={{
-          color: T.colors.muted,
-          textDecoration: 'none',
-          transition: 'color 0.2s',
-        }}>services</Link>
-        <span style={{ color: T.colors.muted }}>/</span>
-        <span style={{ color: T.colors.burgundy, fontWeight: 500 }}>cost-of-vacancy</span>
-      </div>
-
-      <nav style={{ display: 'flex', gap: '32px' }}>
-        <a href="https://www.linkedin.com/in/deniz-levent-tulay-tekom2025" target="_blank" rel="noopener noreferrer" style={{
-          fontFamily: T.font,
-          fontSize: T.type.micro.size,
-          color: T.colors.muted,
-          textDecoration: 'none',
-          letterSpacing: T.type.micro.spacing,
-          textTransform: 'uppercase',
-          transition: 'color 0.3s',
-        }}>LinkedIn</a>
-        <Link to="/kontakt" style={{
-          fontFamily: T.font,
-          fontSize: T.type.micro.size,
-          color: T.colors.muted,
-          textDecoration: 'none',
-          letterSpacing: T.type.micro.spacing,
-          textTransform: 'uppercase',
-          transition: 'color 0.3s',
-        }}>Kontakt</Link>
-      </nav>
-    </header>
-  );
-};
 
 // Calculator - Z-Pattern Layout (Result first, inputs below, no boxes)
 const Calculator = () => {
@@ -881,7 +794,7 @@ export default function CostOfVacancyPage() {
 
       <TargetCursor targetSelector=".cursor-target, a, button" color={T.colors.cream} />
       <GrainOverlay />
-      <Header />
+      <Header currentPage="cost-of-vacancy" />
       <StickyCTA />
 
       {/* HERO */}

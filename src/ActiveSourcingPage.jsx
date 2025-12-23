@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import TargetCursor from './TargetCursor';
 import ElectricBorder from './ElectricBorder';
+import Header from './Header';
 import T from './designTokens';
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -44,92 +45,6 @@ const GrainOverlay = () => (
   }} />
 );
 
-// Header Navigation with Terminal Breadcrumb
-const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <header style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1000,
-      padding: '20px 10vw',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      background: scrolled ? 'rgba(219, 214, 204, 0.95)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(10px)' : 'none',
-      transition: 'all 0.3s ease',
-    }}>
-      <Link to="/" style={{
-        fontFamily: T.font,
-        fontSize: '12px',
-        fontWeight: 500,
-        color: T.colors.black,
-        textDecoration: 'none',
-        letterSpacing: '0.1em',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-      }}>
-        <span style={{ color: T.colors.burgundy }}>←</span> DENIZ TULAY
-      </Link>
-
-      {/* Terminal Breadcrumb */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        fontFamily: T.font,
-        fontSize: '11px',
-        letterSpacing: '0.05em',
-      }}>
-        <span style={{
-          width: '6px',
-          height: '6px',
-          borderRadius: '50%',
-          background: T.colors.burgundy,
-          boxShadow: `0 0 8px ${T.colors.burgundy}`,
-        }} />
-        <span style={{ color: T.colors.muted }}>~/</span>
-        <Link to="/cost-of-vacancy" style={{
-          color: T.colors.muted,
-          textDecoration: 'none',
-          transition: 'color 0.2s',
-        }}>services</Link>
-        <span style={{ color: T.colors.muted }}>/</span>
-        <span style={{ color: T.colors.burgundy, fontWeight: 500 }}>active-sourcing</span>
-      </div>
-
-      <nav style={{ display: 'flex', gap: '32px' }}>
-        <a href="https://www.linkedin.com/in/deniz-levent-tulay-tekom2025" target="_blank" rel="noopener noreferrer" style={{
-          fontFamily: T.font,
-          fontSize: '10px',
-          color: T.colors.muted,
-          textDecoration: 'none',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-        }}>LinkedIn</a>
-        <a href="mailto:d.l.tulay@tekom-gmbh.de" style={{
-          fontFamily: T.font,
-          fontSize: '10px',
-          color: T.colors.muted,
-          textDecoration: 'none',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-        }}>Kontakt</a>
-      </nav>
-    </header>
-  );
-};
 
 // Animated Number
 const AnimatedNumber = ({ value, prefix = '', suffix = '' }) => {
@@ -1205,7 +1120,7 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
 
       <TargetCursor targetSelector=".cursor-target, a, button" color={T.colors.black} />
       <GrainOverlay />
-      <Header />
+      <Header currentPage="active-sourcing" />
       <StickyCTA />
 
       {/* ════════════════════════════════════════════════════════════════

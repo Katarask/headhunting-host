@@ -1,24 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TargetCursor from './TargetCursor';
-
-// Design Tokens
-const T = {
-  colors: {
-    sand: '#DBD6CC',
-    cream: '#EFEDE5',
-    burgundy: '#652126',
-    black: '#0a0a0a',
-    darkAlt: '#151413',
-    muted: 'rgba(10, 10, 10, 0.5)',
-    mutedLight: 'rgba(239, 237, 229, 0.6)',
-    border: 'rgba(101, 33, 38, 0.2)',
-    borderLight: 'rgba(239, 237, 229, 0.15)',
-    success: '#2D5A3D',
-    error: '#8B2635',
-  },
-  font: '"JetBrains Mono", "SF Mono", monospace',
-};
+import Header from './Header';
+import T from './designTokens';
 
 // Grain Overlay
 const GrainOverlay = () => (
@@ -29,67 +13,6 @@ const GrainOverlay = () => (
   }} />
 );
 
-// Header Navigation
-const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <header style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1000,
-      padding: '20px 8vw',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      background: scrolled ? 'rgba(219, 214, 204, 0.95)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(10px)' : 'none',
-      transition: 'all 0.3s ease',
-    }}>
-      <Link to="/" className="cursor-target" style={{
-        fontFamily: T.font,
-        fontSize: '12px',
-        fontWeight: 500,
-        color: T.colors.black,
-        textDecoration: 'none',
-        letterSpacing: '0.1em',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-      }}>
-        <span style={{ color: T.colors.burgundy }}>&#8592;</span> DENIZ TULAY
-      </Link>
-      <nav style={{ display: 'flex', gap: '32px' }}>
-        <a href="https://www.linkedin.com/in/deniz-levent-tulay-tekom2025" target="_blank" rel="noopener noreferrer" className="cursor-target" style={{
-          fontFamily: T.font,
-          fontSize: '10px',
-          color: T.colors.muted,
-          textDecoration: 'none',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          transition: 'color 0.3s',
-        }}>LinkedIn</a>
-        <a href="mailto:d.l.tulay@tekom-gmbh.de" className="cursor-target" style={{
-          fontFamily: T.font,
-          fontSize: '10px',
-          color: T.colors.muted,
-          textDecoration: 'none',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          transition: 'color 0.3s',
-        }}>Email</a>
-      </nav>
-    </header>
-  );
-};
 
 // Input Component
 const Input = ({ label, type = 'text', name, value, onChange, required = false, placeholder }) => {
@@ -293,7 +216,7 @@ const SuccessMessage = () => (
 const ErrorMessage = ({ message }) => (
   <div style={{
     padding: '24px',
-    background: T.colors.error,
+    background: T.colors.danger,
     marginBottom: '32px',
   }}>
     <div style={{
@@ -381,7 +304,7 @@ export default function ContactPage() {
 
       <TargetCursor targetSelector=".cursor-target, a, button, input, textarea, select" color={T.colors.black} />
       <GrainOverlay />
-      <Header />
+      <Header currentPage="kontakt" />
 
       <div style={{
         maxWidth: '600px',
