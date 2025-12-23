@@ -627,12 +627,7 @@ const Header = () => {
           background: tokens.colors.burgundy,
           boxShadow: `0 0 8px ${tokens.colors.burgundy}`,
         }} />
-        <span style={{ color: tokens.colors.muted }}>~/</span>
-        <Link to="/cost-of-vacancy" className="cursor-target" style={{
-          color: tokens.colors.muted,
-          textDecoration: 'none',
-          transition: 'color 0.2s',
-        }}>services</Link>
+        <span style={{ color: tokens.colors.burgundy }}>~/recruiting</span>
         <span style={{ color: tokens.colors.muted }}>/</span>
         <Link to="/cost-of-vacancy" className="cursor-target" style={{
           color: tokens.colors.muted,
