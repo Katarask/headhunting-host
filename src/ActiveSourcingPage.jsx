@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import TargetCursor from './TargetCursor';
+import ElectricBorder from './ElectricBorder';
+import T from './designTokens';
 
 // ══════════════════════════════════════════════════════════════════════════════
 // ACTIVE SOURCING LANDING PAGE
 // ══════════════════════════════════════════════════════════════════════════════
-// 
+//
 // Unique Angles:
 // 1. ROI-Rechner (nicht nur Floskeln)
 // 2. Make-or-Buy Entscheidungstabelle
@@ -14,41 +16,11 @@ import TargetCursor from './TargetCursor';
 //
 // ══════════════════════════════════════════════════════════════════════════════
 
-// Design Tokens
-const T = {
-  colors: {
-    sand: '#DBD6CC',
-    cream: '#EFEDE5',
-    burgundy: '#652126',
-    black: '#0a0a0a',
-    darkAlt: '#151413',
-    muted: 'rgba(10, 10, 10, 0.45)',
-    mutedLight: 'rgba(239, 237, 229, 0.55)',
-    border: 'rgba(101, 33, 38, 0.12)',
-    borderLight: 'rgba(239, 237, 229, 0.15)',
-    success: '#2D5A3D',
-    warning: '#8B6914',
-    danger: '#652126',
-  },
-  font: '"JetBrains Mono", "SF Mono", monospace',
-  space: {
-    xs: '8px',
-    sm: '16px',
-    md: '24px',
-    lg: '32px',
-    xl: '48px',
-    xxl: '64px',
-    section: 'clamp(80px, 12vw, 140px)',
-  },
-  easing: {
-    smooth: 'cubic-bezier(0.23, 1, 0.32, 1)',
-    snappy: 'cubic-bezier(0.19, 1, 0.22, 1)',
-  },
-  timing: {
-    fast: '200ms',
-    medium: '400ms',
-    slow: '800ms',
-  },
+// Timing constants (could be added to T later)
+const timing = {
+  fast: '200ms',
+  medium: '400ms',
+  slow: '800ms',
 };
 
 // Responsive Hook
@@ -72,7 +44,7 @@ const GrainOverlay = () => (
   }} />
 );
 
-// Header Navigation
+// Header Navigation with Terminal Breadcrumb
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
 
@@ -110,6 +82,33 @@ const Header = () => {
       }}>
         <span style={{ color: T.colors.burgundy }}>←</span> DENIZ TULAY
       </Link>
+
+      {/* Terminal Breadcrumb */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        fontFamily: T.font,
+        fontSize: '11px',
+        letterSpacing: '0.05em',
+      }}>
+        <span style={{
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          background: T.colors.burgundy,
+          boxShadow: `0 0 8px ${T.colors.burgundy}`,
+        }} />
+        <span style={{ color: T.colors.muted }}>~/</span>
+        <Link to="/cost-of-vacancy" style={{
+          color: T.colors.muted,
+          textDecoration: 'none',
+          transition: 'color 0.2s',
+        }}>services</Link>
+        <span style={{ color: T.colors.muted }}>/</span>
+        <span style={{ color: T.colors.burgundy, fontWeight: 500 }}>active-sourcing</span>
+      </div>
+
       <nav style={{ display: 'flex', gap: '32px' }}>
         <a href="https://www.linkedin.com/in/deniz-levent-tulay-tekom2025" target="_blank" rel="noopener noreferrer" style={{
           fontFamily: T.font,
@@ -593,54 +592,532 @@ const ROIRechner = () => {
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
-// PAIN POINT COMPONENT
+// STAGGERED PARAGRAPHS COMPONENT
 // ══════════════════════════════════════════════════════════════════════════════
-const PainPoint = ({ number, title, description }) => {
-  const [hover, setHover] = useState(false);
-  
+const StaggeredParagraphs = ({ text, isActive, resetKey }) => {
+  const paragraphs = text.split('\n\n').filter(p => p.trim());
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useEffect(() => {
+    if (isActive) {
+      setVisibleCount(0);
+      const timers = paragraphs.map((_, i) =>
+        setTimeout(() => setVisibleCount(prev => prev + 1), 150 + i * 200)
+      );
+      return () => timers.forEach(clearTimeout);
+    } else {
+      setVisibleCount(0);
+    }
+  }, [isActive, resetKey]);
+
+  return (
+    <div>
+      {paragraphs.map((para, i) => (
+        <p
+          key={i}
+          style={{
+            fontFamily: T.font,
+            fontSize: '14px',
+            lineHeight: 2,
+            color: T.colors.muted,
+            marginBottom: i < paragraphs.length - 1 ? T.space.md : 0,
+            opacity: i < visibleCount ? 1 : 0,
+            transform: i < visibleCount ? 'translateY(0)' : 'translateY(15px)',
+            transition: `all 500ms ${T.easing.snappy}`,
+          }}
+        >
+          {para}
+        </p>
+      ))}
+    </div>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SCRAMBLE EFFECT HOOK
+// ══════════════════════════════════════════════════════════════════════════════
+const useScramble = (text, isActive) => {
+  const [displayed, setDisplayed] = useState(text);
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&*';
+
+  useEffect(() => {
+    if (!isActive) { setDisplayed(text); return; }
+    let frameId, iteration = 0;
+    const startTime = performance.now();
+    const duration = text.length * 60;
+
+    const animate = (now) => {
+      iteration = ((now - startTime) / duration) * text.length;
+      setDisplayed(text.split('').map((char, i) => {
+        if (char === ' ') return ' ';
+        if (i < iteration) return text[i];
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join(''));
+      if (iteration < text.length) frameId = requestAnimationFrame(animate);
+      else setDisplayed(text);
+    };
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, [isActive, text]);
+
+  return displayed;
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// GLOWING TAB COMPONENT
+// ══════════════════════════════════════════════════════════════════════════════
+const GlowingTab = ({ item, isActive, onClick, isMobile }) => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const tabRef = useRef(null);
+  const scrambledTitle = useScramble(item.title, isHovered);
+
+  const handleMouseMove = (e) => {
+    if (!tabRef.current || isActive) return;
+    const rect = tabRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
   return (
     <div
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      ref={tabRef}
+      className="cursor-target"
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        padding: T.space.xl,
-        background: hover ? T.colors.burgundy : T.colors.cream,
-        border: `1px solid ${T.colors.border}`,
+        padding: T.space.lg,
+        background: isActive ? T.colors.burgundy : T.colors.cream,
+        cursor: 'pointer',
         transition: `all ${T.timing.medium} ${T.easing.smooth}`,
-        cursor: 'default',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      {/* Hover Glow Effect - follows mouse */}
+      {!isActive && isHovered && (
+        <div
+          style={{
+            position: 'absolute',
+            top: mousePos.y - 100,
+            left: mousePos.x - 100,
+            width: '200px',
+            height: '200px',
+            background: `radial-gradient(circle, ${T.colors.burgundy}25 0%, transparent 70%)`,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {/* Header Row */}
       <div style={{
-        fontFamily: T.font,
-        fontSize: '64px',
-        fontWeight: 200,
-        color: hover ? T.colors.cream : T.colors.burgundy,
-        opacity: 0.3,
-        lineHeight: 1,
-        marginBottom: T.space.md,
-        transition: `all ${T.timing.medium}`,
+        display: 'flex',
+        alignItems: 'center',
+        gap: T.space.md,
+        position: 'relative',
+        zIndex: 1,
       }}>
-        {number}
+        <span style={{
+          fontFamily: T.font,
+          fontSize: '32px',
+          fontWeight: 200,
+          color: isActive ? T.colors.cream : T.colors.burgundy,
+          opacity: isActive ? 0.7 : 0.5,
+          lineHeight: 1,
+          transition: `all ${T.timing.medium}`,
+        }}>
+          {item.number}
+        </span>
+        <span style={{
+          fontFamily: T.font,
+          fontSize: '15px',
+          fontWeight: 500,
+          color: isActive ? T.colors.cream : T.colors.black,
+          flex: 1,
+          transition: `all ${T.timing.medium}`,
+        }}>
+          {scrambledTitle}
+        </span>
+        <span style={{
+          fontFamily: T.font,
+          fontSize: '18px',
+          color: isActive ? T.colors.cream : T.colors.burgundy,
+          transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)',
+          transition: `all ${T.timing.medium}`,
+        }}>
+          +
+        </span>
       </div>
+
+      {/* Mobile: Inline Description */}
+      {isMobile && (
+        <div style={{
+          maxHeight: isActive ? '500px' : '0',
+          overflow: 'hidden',
+          transition: `all ${T.timing.medium} ${T.easing.smooth}`,
+        }}>
+          <div style={{
+            paddingTop: T.space.md,
+            fontFamily: T.font,
+            fontSize: '13px',
+            lineHeight: 1.9,
+            color: 'rgba(239,237,229,0.85)',
+          }}>
+            {item.longDescription}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PAIN POINTS AKKORDEON COMPONENT
+// ══════════════════════════════════════════════════════════════════════════════
+const PainPointsAkkordeon = ({ items }) => {
+  const [activeId, setActiveId] = useState(items[0]?.id || null);
+  const { isMobile } = useResponsive();
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      gap: '2px',
+      background: T.colors.border,
+    }}>
+      {/* Left: Tab List */}
       <div style={{
-        fontFamily: T.font,
-        fontSize: '18px',
-        fontWeight: 500,
-        color: hover ? T.colors.cream : T.colors.black,
-        marginBottom: T.space.sm,
-        transition: `all ${T.timing.medium}`,
+        flex: isMobile ? 'none' : '0 0 45%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2px',
       }}>
-        {title}
+        {items.map((item) => (
+          <GlowingTab
+            key={item.id}
+            item={item}
+            isActive={activeId === item.id}
+            onClick={() => setActiveId(item.id)}
+            isMobile={isMobile}
+          />
+        ))}
       </div>
+
+      {/* Right: Description Panel (Desktop only) */}
+      {!isMobile && (
+        <div style={{
+          flex: '1',
+          background: T.colors.cream,
+          padding: T.space.xl,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          {items.map((item) => {
+            const isActive = activeId === item.id;
+            return (
+              <div
+                key={item.id}
+                style={{
+                  position: isActive ? 'relative' : 'absolute',
+                  opacity: isActive ? 1 : 0,
+                  transform: isActive ? 'translateY(0)' : 'translateY(20px)',
+                  transition: `all ${T.timing.medium} ${T.easing.smooth}`,
+                  pointerEvents: isActive ? 'auto' : 'none',
+                }}
+              >
+                <div style={{
+                  fontFamily: T.font,
+                  fontSize: '11px',
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  color: T.colors.burgundy,
+                  marginBottom: T.space.sm,
+                  opacity: isActive ? 1 : 0,
+                  transform: isActive ? 'translateY(0)' : 'translateY(10px)',
+                  transition: `all 400ms ${T.easing.snappy} 0ms`,
+                }}>
+                  {item.number} — Problem
+                </div>
+                <div style={{
+                  fontFamily: T.font,
+                  fontSize: '22px',
+                  fontWeight: 400,
+                  color: T.colors.black,
+                  marginBottom: T.space.lg,
+                  lineHeight: 1.3,
+                  opacity: isActive ? 1 : 0,
+                  transform: isActive ? 'translateY(0)' : 'translateY(10px)',
+                  transition: `all 400ms ${T.easing.snappy} 50ms`,
+                }}>
+                  {item.title}
+                </div>
+                <StaggeredParagraphs
+                  text={item.longDescription}
+                  isActive={isActive}
+                  resetKey={activeId}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FAQ ITEM COMPONENT (with mouse-following glow)
+// ══════════════════════════════════════════════════════════════════════════════
+const FAQItem = ({ item, index, isActive, onClick }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const itemRef = useRef(null);
+  const scrambledTitle = useScramble(item.title, isHovered);
+
+  const handleMouseMove = (e) => {
+    if (!itemRef.current || isActive) return;
+    const rect = itemRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <div
+      ref={itemRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ position: 'relative' }}
+    >
+      {/* Glow Border when active */}
+      {isActive && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          border: `1px solid ${T.colors.burgundy}`,
+          boxShadow: `0 0 20px ${T.colors.burgundy}30`,
+          pointerEvents: 'none',
+          zIndex: 1,
+        }} />
+      )}
+
+      {/* Mouse-following glow effect */}
+      {isHovered && !isActive && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            pointerEvents: 'none',
+            zIndex: 0,
+            background: `radial-gradient(300px circle at ${mousePos.x}px ${mousePos.y}px, ${T.colors.burgundy}15, transparent 70%)`,
+            transition: 'opacity 0.3s ease',
+          }}
+        />
+      )}
+
+      <button
+        className="cursor-target"
+        onClick={onClick}
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          width: '100%',
+          padding: '20px 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: T.space.md,
+          background: isActive
+            ? `linear-gradient(90deg, ${T.colors.darkAlt}, rgba(101, 33, 38, 0.15))`
+            : T.colors.darkAlt,
+          border: 'none',
+          borderBottom: `1px solid ${T.colors.borderLight}`,
+          cursor: 'pointer',
+          transition: `all ${T.timing.medium} ${T.easing.smooth}`,
+        }}
+      >
+        <span style={{
+          fontFamily: T.font,
+          fontSize: '10px',
+          color: isActive ? T.colors.burgundy : T.colors.mutedLight,
+          letterSpacing: '0.1em',
+          opacity: 0.6,
+        }}>
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <span style={{
+          fontFamily: T.font,
+          fontSize: '13px',
+          fontWeight: 500,
+          color: isHovered || isActive ? T.colors.cream : T.colors.mutedLight,
+          letterSpacing: '0.02em',
+          textAlign: 'left',
+          flex: 1,
+          transition: `all ${T.timing.medium}`,
+        }}>
+          {scrambledTitle}
+        </span>
+        <span style={{
+          fontFamily: T.font,
+          fontSize: '18px',
+          color: isActive ? T.colors.burgundy : T.colors.mutedLight,
+          transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)',
+          transition: `all ${T.timing.medium}`,
+        }}>
+          +
+        </span>
+      </button>
+
+      {/* Content */}
       <div style={{
-        fontFamily: T.font,
-        fontSize: '13px',
-        lineHeight: 1.8,
-        color: hover ? 'rgba(239,237,229,0.8)' : T.colors.muted,
-        transition: `all ${T.timing.medium}`,
+        maxHeight: isActive ? '300px' : '0',
+        overflow: 'hidden',
+        transition: `all ${T.timing.medium} ${T.easing.smooth}`,
+        background: 'rgba(101, 33, 38, 0.05)',
       }}>
-        {description}
+        <div style={{
+          padding: isActive ? '20px 24px' : '0 24px',
+          opacity: isActive ? 1 : 0,
+          transition: `all ${T.timing.medium} 100ms`,
+        }}>
+          <p style={{
+            fontFamily: T.font,
+            fontSize: '13px',
+            lineHeight: 1.9,
+            color: T.colors.mutedLight,
+            margin: 0,
+          }}>
+            {item.content}
+          </p>
+        </div>
       </div>
+    </div>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FAQ AKKORDEON COMPONENT (unified style with Pain Points)
+// ══════════════════════════════════════════════════════════════════════════════
+const FAQAkkordeon = ({ items }) => {
+  const [activeId, setActiveId] = useState(null);
+
+  return (
+    <div style={{
+      background: T.colors.darkAlt,
+      border: `1px solid ${T.colors.borderLight}`,
+    }}>
+      {/* Terminal Header */}
+      <div style={{
+        padding: '14px 24px',
+        borderBottom: `1px solid ${T.colors.borderLight}`,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+      }}>
+        <span style={{
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          background: T.colors.burgundy,
+          boxShadow: `0 0 10px ${T.colors.burgundy}`,
+        }} />
+        <span style={{
+          fontFamily: T.font,
+          fontSize: '9px',
+          color: T.colors.mutedLight,
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          opacity: 0.6,
+        }}>
+          FAQ_MODULE
+        </span>
+      </div>
+
+      {/* FAQ Items */}
+      {items.map((item, index) => (
+        <FAQItem
+          key={item.id}
+          item={item}
+          index={index}
+          isActive={activeId === item.id}
+          onClick={() => setActiveId(activeId === item.id ? null : item.id)}
+        />
+      ))}
+    </div>
+  );
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STICKY CTA BUTTON
+// ══════════════════════════════════════════════════════════════════════════════
+const StickyCTA = () => {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show after scrolling past hero section (100vh)
+      setVisible(window.scrollY > window.innerHeight * 0.8);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div style={{
+      position: 'fixed',
+      bottom: '32px',
+      right: '32px',
+      zIndex: 999,
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(20px)',
+      pointerEvents: visible ? 'auto' : 'none',
+      transition: `all 400ms ${T.easing.snappy}`,
+    }}>
+      <ElectricBorder color={T.colors.burgundy} speed={1} chaos={0.5} thickness={2} style={{ borderRadius: '100px', display: 'inline-block' }}>
+        <a
+          href="mailto:d.l.tulay@tekom-gmbh.de"
+          className="cursor-target"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '14px 24px',
+            background: T.colors.black,
+            border: 'none',
+            borderRadius: '100px',
+            color: T.colors.cream,
+            fontFamily: T.font,
+            fontSize: '11px',
+            fontWeight: 500,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <span style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: T.colors.burgundy,
+            boxShadow: `0 0 8px ${T.colors.burgundy}`,
+          }} />
+          Gespräch vereinbaren
+        </a>
+      </ElectricBorder>
     </div>
   );
 };
@@ -653,24 +1130,44 @@ export default function ActiveSourcingLanding() {
   
   const painPoints = [
     {
+      id: 'nebenbei',
       number: '01',
       title: '"Wir machen das nebenbei"',
-      description: 'Ihr HR-Team jongliert Onboarding, Admin und Active Sourcing gleichzeitig. 2 Stunden pro Woche reichen nicht für gutes Sourcing.',
+      longDescription: `Ihr HR-Team jongliert Onboarding, Admin, Mitarbeitergespräche und Active Sourcing gleichzeitig. Das Ergebnis? 2-3 Stunden pro Woche für Sourcing – wenn überhaupt.
+
+Das reicht vielleicht für ein paar LinkedIn-Suchen und Copy-Paste-Nachrichten. Aber für echtes Active Sourcing braucht es: Research, personalisierte Ansprache, Follow-ups, Netzwerkpflege, Marktbeobachtung.
+
+Die Rechnung ist einfach: Ein guter Sourcer braucht 15-20 Stunden pro Woche pro Stelle. Bei 3 offenen Positionen sind das 45-60 Stunden – also mehr als ein Vollzeit-Job. "Nebenbei" funktioniert nicht.`,
     },
     {
+      id: 'copypaste',
       number: '02',
       title: 'Copy-Paste LinkedIn-Nachrichten',
-      description: 'Senior Devs bekommen 10-20 Anfragen pro Woche. Ihre generische InMail landet im digitalen Papierkorb. Response Rate: <3%.',
+      longDescription: `Senior Entwickler bekommen 10-20 Recruiter-Anfragen pro Woche. Jeden Tag dasselbe: "Spannende Herausforderung", "Innovatives Unternehmen", "Attraktives Gehaltspaket".
+
+Die Response Rate auf generische InMails liegt bei unter 3%. Das bedeutet: Von 100 Nachrichten antworten 3 Kandidaten – und davon sind vielleicht 1-2 ernsthaft interessiert.
+
+Was funktioniert? Personalisierung. Referenz auf ein GitHub-Projekt. Ein konkreter Tech-Stack. Ein echter Grund, warum genau dieser Kandidat passt. Das kostet Zeit – 15-20 Minuten pro Nachricht statt 30 Sekunden. Aber die Response Rate steigt auf 25-40%.`,
     },
     {
+      id: 'teich',
       number: '03',
       title: 'Alle fischen im selben Teich',
-      description: 'LinkedIn ist überfischt. Die besten Kandidaten sind auf GitHub, Stack Overflow, Discord – aber wer hat Zeit, das zu lernen?',
+      longDescription: `95% aller Recruiter suchen auf LinkedIn. Das Problem: Die besten Entwickler sind dort entweder unsichtbar (kein aktives Profil) oder komplett abgestumpft (ignorieren alle Anfragen).
+
+Wo sind die Top-Talente wirklich? Auf GitHub – wo sie Code committen. Auf Stack Overflow – wo sie Fragen beantworten. In Discord-Servern ihrer Lieblings-Frameworks. Auf Meetups und Konferenzen. In Open-Source-Communities.
+
+Diese Kanäle zu erschließen braucht Zeit, Tech-Verständnis und Netzwerk. Ein HR-Generalist kann das nicht nebenbei lernen. Ein spezialisierter Tech-Recruiter lebt in diesen Communities.`,
     },
     {
+      id: 'techverstaendnis',
       number: '04',
       title: 'Kein Tech-Verständnis',
-      description: 'Wenn Ihr Recruiter nicht erklären kann, warum Rust spannender ist als Java, verlieren Sie den Kandidaten im ersten Call.',
+      longDescription: `"Wir suchen jemanden mit 5 Jahren Kubernetes-Erfahrung" – Kubernetes gibt es seit 2014, also maximal 10 Jahre. Solche Fehler passieren, wenn Recruiter die Technologie nicht verstehen.
+
+Das Problem geht tiefer: Wenn Ihr Recruiter nicht erklären kann, warum Rust spannender ist als Java, warum Ihr Microservices-Stack interessant ist, oder was der Unterschied zwischen einem Senior und einem Staff Engineer ist – verlieren Sie den Kandidaten im ersten Gespräch.
+
+Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er es nicht, ist das Gespräch vorbei – egal wie gut das Gehalt ist. Tech-Recruiting braucht Tech-Verständnis. Punkt.`,
     },
   ];
 
@@ -680,12 +1177,16 @@ export default function ActiveSourcingLanding() {
       background: T.colors.sand,
       color: T.colors.black,
       minHeight: '100vh',
+      height: '100vh',
+      overflowY: 'scroll',
+      scrollSnapType: 'y mandatory',
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;300;400;500;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
         ::selection { background: ${T.colors.burgundy}; color: ${T.colors.cream}; }
-        
+        .snap-section { scroll-snap-align: start; }
+
         input[type="range"] {
           -webkit-appearance: none;
           width: 100%;
@@ -705,11 +1206,12 @@ export default function ActiveSourcingLanding() {
       <TargetCursor targetSelector=".cursor-target, a, button" color={T.colors.black} />
       <GrainOverlay />
       <Header />
+      <StickyCTA />
 
       {/* ════════════════════════════════════════════════════════════════
           HERO - Provokation
       ════════════════════════════════════════════════════════════════ */}
-      <section style={{
+      <section className="snap-section" style={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -839,10 +1341,12 @@ export default function ActiveSourcingLanding() {
       ════════════════════════════════════════════════════════════════ */}
       <section
         id="rechner"
+        className="snap-section"
         style={{
           background: T.colors.black,
           color: T.colors.cream,
           padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,
+          minHeight: '100vh',
         }}
       >
         <FadeIn>
@@ -873,9 +1377,10 @@ export default function ActiveSourcingLanding() {
       {/* ════════════════════════════════════════════════════════════════
           PAIN POINTS - Brutal ehrlich
       ════════════════════════════════════════════════════════════════ */}
-      <section style={{
+      <section className="snap-section" style={{
         background: T.colors.sand,
         padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,
+        minHeight: '100vh',
       }}>
         <FadeIn>
           <div style={{
@@ -899,26 +1404,19 @@ export default function ActiveSourcingLanding() {
           </h2>
         </FadeIn>
         
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
-          gap: T.space.md,
-        }}>
-          {painPoints.map((point, i) => (
-            <FadeIn key={i} delay={i * 100}>
-              <PainPoint {...point} />
-            </FadeIn>
-          ))}
-        </div>
+        <FadeIn delay={100}>
+          <PainPointsAkkordeon items={painPoints} />
+        </FadeIn>
       </section>
 
       {/* ════════════════════════════════════════════════════════════════
           MEINE METHODE
       ════════════════════════════════════════════════════════════════ */}
-      <section style={{
+      <section className="snap-section" style={{
         background: T.colors.darkAlt,
         color: T.colors.cream,
         padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,
+        minHeight: '100vh',
       }}>
         <div style={{
           display: 'grid',
@@ -1029,13 +1527,84 @@ export default function ActiveSourcingLanding() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════════
+          FAQ SECTION
+      ════════════════════════════════════════════════════════════════ */}
+      <section className="snap-section" style={{
+        background: T.colors.black,
+        color: T.colors.cream,
+        padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,
+        minHeight: '100vh',
+      }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1.5fr',
+          gap: T.space.xxl,
+          alignItems: 'start',
+        }}>
+          <FadeIn>
+            <div style={{
+              fontSize: '11px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: T.colors.mutedLight,
+              marginBottom: T.space.md,
+            }}>
+              Häufige Fragen
+            </div>
+            <h2 style={{
+              fontSize: `clamp(28px, ${isMobile ? '6vw' : '3vw'}, 42px)`,
+              fontWeight: 300,
+              lineHeight: 1.2,
+            }}>
+              Alles über{' '}
+              <span style={{ color: T.colors.burgundy }}>Active Sourcing</span>
+            </h2>
+          </FadeIn>
+
+          <FadeIn delay={100}>
+            <FAQAkkordeon items={[
+              {
+                id: 'was-ist',
+                title: 'Was ist Active Sourcing?',
+                content: 'Active Sourcing ist die proaktive Suche und Direktansprache von Kandidaten, die nicht aktiv auf Jobsuche sind. Im Gegensatz zu klassischen Stellenanzeigen gehen Sie aktiv auf potenzielle Mitarbeiter zu – über LinkedIn, GitHub, Fachforen oder persönliche Netzwerke.',
+              },
+              {
+                id: 'kosten',
+                title: 'Was kostet ein Headhunter?',
+                content: 'Headhunter arbeiten meist erfolgsbasiert und berechnen 20-30% des Jahresgehalts. Bei einem Gehalt von 80.000€ sind das 16.000-24.000€. Klingt viel – aber verglichen mit den Vakanzkosten von 30.000€+ ist es oft die günstigere Option.',
+              },
+              {
+                id: 'dauer',
+                title: 'Wie lange dauert Active Sourcing?',
+                content: 'Intern: 12-16 Wochen bei 45% Erfolgsquote. Mit spezialisiertem Headhunter: 4-6 Wochen bei 92% Erfolgsquote. Der Unterschied liegt in Netzwerk, Erfahrung und Vollzeit-Fokus auf eine Stelle.',
+              },
+              {
+                id: 'wann-extern',
+                title: 'Wann lohnt sich ein externer Recruiter?',
+                content: 'Sobald Sie mehr als 2 Stellen parallel besetzen müssen, Senior-Positionen suchen, oder Ihre Time-to-Hire über 90 Tage liegt. Die Vakanzkosten übersteigen dann schnell die Headhunter-Kosten.',
+              },
+              {
+                id: 'unterschied',
+                title: 'Active Sourcing vs. klassisches Recruiting?',
+                content: 'Klassisches Recruiting wartet auf Bewerber (Post & Pray). Active Sourcing geht proaktiv auf Kandidaten zu. Bei IT-Fachkräften mit 149.000 offenen Stellen funktioniert passives Warten nicht mehr – 70% der Entwickler sind nicht aktiv auf Jobsuche.',
+              },
+            ]} />
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════════
           CTA
       ════════════════════════════════════════════════════════════════ */}
-      <section style={{
+      <section className="snap-section" style={{
         background: T.colors.burgundy,
         color: T.colors.cream,
         padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,
         textAlign: 'center',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
       }}>
         <FadeIn>
           <div style={{ maxWidth: '600px', margin: '0 auto' }}>
@@ -1048,7 +1617,7 @@ export default function ActiveSourcingLanding() {
             }}>
               Nächster Schritt
             </div>
-            
+
             <h2 style={{
               fontSize: `clamp(28px, ${isMobile ? '6vw' : '4vw'}, 48px)`,
               fontWeight: 300,
@@ -1057,7 +1626,7 @@ export default function ActiveSourcingLanding() {
             }}>
               Keine Zeit für Active Sourcing?
             </h2>
-            
+
             <p style={{
               fontSize: '15px',
               lineHeight: 1.8,

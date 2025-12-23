@@ -1,31 +1,19 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { gsap } from 'gsap';
+import { Link } from 'react-router-dom';
 import ElectricBorder from './ElectricBorder';
 import TargetCursor from './TargetCursor';
+import T from './designTokens';
 
 // ============================================
-// DESIGN TOKENS
+// DESIGN TOKENS (Alias for compatibility)
 // ============================================
 const tokens = {
-  colors: {
-    white: '#EFEDE5',
-    black: '#0a0a0a',
-    dark: '#0a0a0a',
-    darkAlt: '#151413',
-    accent: '#652126',
-    muted: 'rgba(207, 187, 163, 0.5)',
-    mutedLight: '#DBD6CC',
-    border: 'rgba(207, 187, 163, 0.15)',
-    navActive: 'rgba(207, 187, 163, 0.2)',
-    sand: '#DBD6CC',
-    cream: '#EFEDE5',
-    burgundy: '#652126',
-  },
-  font: '"JetBrains Mono", "SF Mono", monospace',
-  fontMono: '"JetBrains Mono", "SF Mono", monospace',
+  ...T,
+  fontMono: T.font,
   easing: {
-    hover: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
-    page: 'cubic-bezier(0.19, 1, 0.22, 1)',
+    hover: T.easing.smooth,
+    page: T.easing.snappy,
   },
   timing: {
     fast: '150ms',
@@ -596,6 +584,95 @@ const TalentCarousel = ({ isActive }) => {
 };
 
 // ============================================
+// HEADER - Navigation with Terminal Breadcrumb (like Landing Pages)
+// ============================================
+const Header = () => {
+  return (
+    <header style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1000,
+      padding: '20px 8vw',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      background: 'transparent',
+    }}>
+      {/* Logo / Name */}
+      <div style={{
+        fontFamily: tokens.font,
+        fontSize: '11px',
+        fontWeight: 500,
+        color: tokens.colors.white,
+        letterSpacing: '0.15em',
+      }}>
+        DENIZ TULAY
+      </div>
+
+      {/* Terminal Breadcrumb - Center */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        fontFamily: tokens.font,
+        fontSize: '11px',
+        letterSpacing: '0.05em',
+      }}>
+        <span style={{
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          background: tokens.colors.burgundy,
+          boxShadow: `0 0 8px ${tokens.colors.burgundy}`,
+        }} />
+        <span style={{ color: tokens.colors.muted }}>~/</span>
+        <Link to="/cost-of-vacancy" className="cursor-target" style={{
+          color: tokens.colors.muted,
+          textDecoration: 'none',
+          transition: 'color 0.2s',
+        }}>services</Link>
+        <span style={{ color: tokens.colors.muted }}>/</span>
+        <Link to="/cost-of-vacancy" className="cursor-target" style={{
+          color: tokens.colors.muted,
+          textDecoration: 'none',
+          transition: 'color 0.2s',
+        }}>cost-of-vacancy</Link>
+        <span style={{ color: tokens.colors.muted }}>/</span>
+        <Link to="/active-sourcing" className="cursor-target" style={{
+          color: tokens.colors.muted,
+          textDecoration: 'none',
+          transition: 'color 0.2s',
+        }}>active-sourcing</Link>
+      </div>
+
+      {/* Right Nav Links */}
+      <nav style={{ display: 'flex', gap: '32px' }}>
+        <a href="https://www.linkedin.com/in/deniz-levent-tulay-tekom2025" target="_blank" rel="noopener noreferrer" className="cursor-target" style={{
+          fontFamily: tokens.font,
+          fontSize: '10px',
+          color: tokens.colors.muted,
+          textDecoration: 'none',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          transition: 'color 0.3s',
+        }}>LinkedIn</a>
+        <Link to="/kontakt" className="cursor-target" style={{
+          fontFamily: tokens.font,
+          fontSize: '10px',
+          color: tokens.colors.muted,
+          textDecoration: 'none',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          transition: 'color 0.3s',
+        }}>Kontakt</Link>
+      </nav>
+    </header>
+  );
+};
+
+// ============================================
 // GRAIN OVERLAY
 // ============================================
 const GrainOverlay = () => (
@@ -948,6 +1025,7 @@ export default function App() {
   return (
     <div style={{ backgroundColor: tokens.colors.black, height: '100vh', overflow: 'hidden', position: 'relative' }}>
       <GrainOverlay />
+      <Header />
       <TargetCursor targetSelector=".cursor-target, a, button" />
       <FixedNavbar activeSection={activeSection} onNavigate={navTo} />
 
