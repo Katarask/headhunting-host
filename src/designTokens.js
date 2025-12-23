@@ -66,6 +66,11 @@ const T = {
     smooth: 'cubic-bezier(0.23, 1, 0.32, 1)',
     snappy: 'cubic-bezier(0.19, 1, 0.22, 1)',
   },
+  timing: {
+    fast: '200ms',
+    medium: '400ms',
+    slow: '800ms',
+  },
 };
 
 export default T;
