@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import TargetCursor from './TargetCursor';
 
 // Design Tokens
 const T = {
@@ -552,6 +553,7 @@ export default function CostOfVacancyPage() {
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
       `}</style>
 
+      <TargetCursor targetSelector=".cursor-target, a, button" color={T.colors.cream} />
       <GrainOverlay />
       <Header />
 
