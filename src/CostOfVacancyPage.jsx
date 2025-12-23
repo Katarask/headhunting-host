@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 // Design Tokens
 const T = {
@@ -171,6 +172,77 @@ const AnimatedNumber = ({ value, prefix = '' }) => {
   }, [value]);
   
   return <>{prefix}{display.toLocaleString('de-DE')}</>;
+};
+
+// Grain Overlay
+const GrainOverlay = () => (
+  <div style={{
+    position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+    pointerEvents: 'none', zIndex: 9999, opacity: 0.03,
+    background: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+  }} />
+);
+
+// Header Navigation
+const Header = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <header style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1000,
+      padding: '20px 8vw',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      background: scrolled ? 'rgba(10, 10, 10, 0.9)' : 'transparent',
+      backdropFilter: scrolled ? 'blur(10px)' : 'none',
+      transition: 'all 0.3s ease',
+    }}>
+      <Link to="/" style={{
+        fontFamily: T.font,
+        fontSize: '12px',
+        fontWeight: 500,
+        color: T.colors.cream,
+        textDecoration: 'none',
+        letterSpacing: '0.1em',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+      }}>
+        <span style={{ color: T.colors.burgundy }}>←</span> DENIZ TULAY
+      </Link>
+      <nav style={{ display: 'flex', gap: '32px' }}>
+        <a href="https://www.linkedin.com/in/deniz-levent-tulay-tekom2025" target="_blank" rel="noopener noreferrer" style={{
+          fontFamily: T.font,
+          fontSize: '10px',
+          color: T.colors.muted,
+          textDecoration: 'none',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          transition: 'color 0.3s',
+        }}>LinkedIn</a>
+        <a href="mailto:d.l.tulay@tekom-gmbh.de" style={{
+          fontFamily: T.font,
+          fontSize: '10px',
+          color: T.colors.muted,
+          textDecoration: 'none',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          transition: 'color 0.3s',
+        }}>Kontakt</a>
+      </nav>
+    </header>
+  );
 };
 
 // Calculator
@@ -480,6 +552,9 @@ export default function CostOfVacancyPage() {
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
       `}</style>
 
+      <GrainOverlay />
+      <Header />
+
       {/* HERO */}
       <section style={{ 
         minHeight: '100vh', 
@@ -606,11 +681,11 @@ export default function CostOfVacancyPage() {
 
       {/* FOOTER */}
       <footer style={{ background: T.colors.black, padding: '40px 8vw', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: `1px solid ${T.colors.border}` }}>
-        <div style={{ fontSize: '10px', color: T.colors.muted }}>© 2024 Deniz Tulay — Tech Headhunter München</div>
+        <div style={{ fontSize: '10px', color: T.colors.muted }}>© 2024 Deniz Tulay — Tech Headhunter Muenchen</div>
         <div style={{ display: 'flex', gap: '40px' }}>
-          {['LinkedIn', 'Email', 'Hauptseite'].map((link) => (
-            <a key={link} href="#" style={{ color: T.colors.cream, textDecoration: 'none', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{link}</a>
-          ))}
+          <a href="https://www.linkedin.com/in/deniz-levent-tulay-tekom2025" target="_blank" rel="noopener noreferrer" style={{ color: T.colors.cream, textDecoration: 'none', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>LinkedIn</a>
+          <a href="mailto:d.l.tulay@tekom-gmbh.de" style={{ color: T.colors.cream, textDecoration: 'none', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Email</a>
+          <Link to="/" style={{ color: T.colors.cream, textDecoration: 'none', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Hauptseite</Link>
         </div>
       </footer>
     </div>
