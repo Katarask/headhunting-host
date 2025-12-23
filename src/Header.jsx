@@ -17,12 +17,13 @@ const Header = ({ currentPage = 'home' }) => {
       top: 0,
       left: 0,
       right: 0,
-      zIndex: 1000,
+      zIndex: 10000,
       padding: '20px 8vw',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
       background: 'transparent',
+      pointerEvents: 'auto',
     }}>
       {/* Logo / Name */}
       <Link to="/" className="cursor-target" style={{
