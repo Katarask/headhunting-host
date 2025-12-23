@@ -45,6 +45,192 @@ const GrainOverlay = () => (
   }} />
 );
 
+// ══════════════════════════════════════════════════════════════════════════════
+// METHOD CARD - Grid Animation Effect (Webflow Style)
+// ══════════════════════════════════════════════════════════════════════════════
+const MethodCard = ({ item, isHovered, onHover, onLeave, anyHovered, isMobile }) => {
+  const shouldFade = anyHovered && !isHovered;
+
+  return (
+    <div
+      className="cursor-target"
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      onFocus={onHover}
+      onBlur={onLeave}
+      tabIndex={0}
+      role="listitem"
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        background: T.colors.black,
+        flex: isMobile ? 'none' : '1',
+        minHeight: isMobile ? 'auto' : '400px',
+        display: 'flex',
+        flexDirection: 'column',
+        cursor: 'pointer',
+        transition: `all 500ms ${T.easing.smooth}`,
+        opacity: shouldFade ? 0.3 : 1,
+        transform: isHovered ? 'scale(1.02)' : 'scale(1)',
+      }}
+    >
+      {/* Background Image with Overlay */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: `url(${item.image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: isHovered ? 0.4 : 0.2,
+        transition: `opacity 500ms ${T.easing.smooth}`,
+      }} />
+
+      {/* Dark Gradient Overlay */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: `linear-gradient(180deg, transparent 0%, ${T.colors.black}90 60%, ${T.colors.black} 100%)`,
+      }} />
+
+      {/* Content */}
+      <div style={{
+        position: 'relative',
+        zIndex: 1,
+        padding: T.space.lg,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        flex: 1,
+        transition: `opacity 400ms ${T.easing.smooth}`,
+        opacity: shouldFade ? 0.5 : 1,
+      }}>
+        {/* Number */}
+        <div style={{
+          fontFamily: T.font,
+          fontSize: '11px',
+          letterSpacing: '0.2em',
+          color: T.colors.burgundy,
+          marginBottom: T.space.sm,
+          textTransform: 'uppercase',
+        }}>
+          {item.number}
+        </div>
+
+        {/* Title */}
+        <h3 style={{
+          fontFamily: T.font,
+          fontSize: '20px',
+          fontWeight: 500,
+          color: T.colors.cream,
+          marginBottom: T.space.md,
+          lineHeight: 1.3,
+        }}>
+          {item.title}
+        </h3>
+
+        {/* Grid Animation Container - The Magic */}
+        <div style={{
+          display: 'grid',
+          gridTemplateRows: isHovered ? '1fr' : '0fr',
+          transition: `grid-template-rows 400ms ${T.easing.smooth}`,
+        }}>
+          {/* Mask Clip - overflow hidden is crucial */}
+          <div style={{ overflow: 'hidden' }}>
+            <p style={{
+              fontFamily: T.font,
+              fontSize: '13px',
+              lineHeight: 1.8,
+              color: T.colors.mutedLight,
+              marginBottom: T.space.md,
+              opacity: isHovered ? 1 : 0,
+              transform: isHovered ? 'translateY(0)' : 'translateY(10px)',
+              transition: `all 400ms ${T.easing.smooth} 100ms`,
+            }}>
+              {item.description}
+            </p>
+
+            {/* Stats */}
+            {item.stat && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: T.space.sm,
+                paddingTop: T.space.sm,
+                borderTop: `1px solid ${T.colors.borderLight}`,
+                opacity: isHovered ? 1 : 0,
+                transition: `opacity 400ms ${T.easing.smooth} 200ms`,
+              }}>
+                <span style={{
+                  fontFamily: T.font,
+                  fontSize: '28px',
+                  fontWeight: 300,
+                  color: T.colors.burgundy,
+                }}>
+                  {item.stat.value}
+                </span>
+                <span style={{
+                  fontFamily: T.font,
+                  fontSize: '11px',
+                  letterSpacing: '0.1em',
+                  color: T.colors.mutedLight,
+                  textTransform: 'uppercase',
+                }}>
+                  {item.stat.label}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Hover Border Glow */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        border: `1px solid ${isHovered ? T.colors.burgundy : T.colors.borderLight}`,
+        boxShadow: isHovered ? `0 0 30px ${T.colors.burgundy}30, inset 0 0 30px ${T.colors.burgundy}10` : 'none',
+        transition: `all 400ms ${T.easing.smooth}`,
+        pointerEvents: 'none',
+      }} />
+    </div>
+  );
+};
+
+// Method Cards Grid Container
+const MethodCardsGrid = ({ items, isMobile }) => {
+  const [hoveredId, setHoveredId] = useState(null);
+
+  return (
+    <div
+      role="list"
+      style={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        gap: '2px',
+        background: T.colors.borderLight,
+      }}
+    >
+      {items.map((item) => (
+        <MethodCard
+          key={item.id}
+          item={item}
+          isHovered={hoveredId === item.id}
+          onHover={() => setHoveredId(item.id)}
+          onLeave={() => setHoveredId(null)}
+          anyHovered={hoveredId !== null}
+          isMobile={isMobile}
+        />
+      ))}
+    </div>
+  );
+};
+
 
 // Animated Number
 const AnimatedNumber = ({ value, prefix = '', suffix = '' }) => {
@@ -1325,119 +1511,118 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
       </section>
 
       {/* ════════════════════════════════════════════════════════════════
-          MEINE METHODE
+          MEINE METHODE - Interactive Cards with Grid Animation
       ════════════════════════════════════════════════════════════════ */}
       <section className="snap-section" style={{
         background: T.colors.darkAlt,
         color: T.colors.cream,
-        padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,
         minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
       }}>
+        {/* Header */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-          gap: T.space.xxl,
+          padding: `${T.space.xl} ${isMobile ? '6vw' : '10vw'} ${T.space.lg}`,
         }}>
-          <div>
-            <FadeIn>
-              <div style={{
-                fontSize: '11px',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: T.colors.mutedLight,
-                marginBottom: T.space.md,
-              }}>
-                Meine Methode
-              </div>
-              
-              <h2 style={{
-                fontSize: `clamp(28px, ${isMobile ? '6vw' : '3vw'}, 42px)`,
+          <FadeIn>
+            <div style={{
+              fontSize: '11px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: T.colors.mutedLight,
+              marginBottom: T.space.md,
+            }}>
+              Meine Methode
+            </div>
+
+            <h2 style={{
+              fontSize: `clamp(28px, ${isMobile ? '6vw' : '3vw'}, 42px)`,
+              fontWeight: 300,
+              maxWidth: '700px',
+            }}>
+              Wie ich Active Sourcing{' '}
+              <span style={{ color: T.colors.burgundy }}>anders</span> mache
+            </h2>
+          </FadeIn>
+        </div>
+
+        {/* Cards Grid - Full Width */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <FadeIn delay={100}>
+            <MethodCardsGrid
+              isMobile={isMobile}
+              items={[
+                {
+                  id: 'multi-channel',
+                  number: '01',
+                  title: 'Multi-Channel Sourcing',
+                  description: 'Nicht nur LinkedIn. Ich finde Kandidaten dort, wo sie aktiv sind: GitHub Commits, Stack Overflow Antworten, Discord Communities, Tech Meetups, Open-Source Projekte.',
+                  image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
+                  stat: { value: '5+', label: 'Kanäle parallel' },
+                },
+                {
+                  id: 'personalisiert',
+                  number: '02',
+                  title: 'Personalisierte Ansprache',
+                  description: 'Jede Nachricht referenziert echte Projekte. Ich lese Code, verstehe Contributions und spreche Kandidaten auf Augenhöhe an. Kein Copy-Paste, keine Templates.',
+                  image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80',
+                  stat: { value: '35%', label: 'Response Rate' },
+                },
+                {
+                  id: 'tech',
+                  number: '03',
+                  title: 'Tech-Verständnis',
+                  description: 'Ich spreche IT, nicht HR-Deutsch. Kubernetes vs. Docker, React vs. Vue, Rust vs. Go – ich verstehe die Unterschiede und kann erklären, warum Ihr Stack interessant ist.',
+                  image: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&q=80',
+                  stat: { value: '7', label: 'Jahre Tech Recruiting' },
+                },
+                {
+                  id: 'schnell',
+                  number: '04',
+                  title: 'Schnelle Besetzung',
+                  description: 'Weil ich nur IT & Engineering mache, habe ich ein aktives Netzwerk aus 5.000+ Kontakten. Viele Positionen besetze ich aus meinem Pool – ohne lange Suche.',
+                  image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+                  stat: { value: '42', label: 'Tage ø Time-to-Hire' },
+                },
+              ]}
+            />
+          </FadeIn>
+        </div>
+
+        {/* Bottom Stats Bar */}
+        <div style={{
+          padding: `${T.space.lg} ${isMobile ? '6vw' : '10vw'}`,
+          borderTop: `1px solid ${T.colors.borderLight}`,
+          display: 'flex',
+          justifyContent: isMobile ? 'flex-start' : 'flex-end',
+          gap: T.space.xxl,
+          flexWrap: 'wrap',
+        }}>
+          {[
+            { value: '500+', label: 'Placements' },
+            { value: '98%', label: 'Retention' },
+            { value: '92%', label: 'Erfolgsquote' },
+          ].map((stat, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'baseline', gap: T.space.sm }}>
+              <span style={{
+                fontFamily: T.font,
+                fontSize: '24px',
                 fontWeight: 300,
-                marginBottom: T.space.xl,
+                color: T.colors.burgundy,
               }}>
-                Wie ich Active Sourcing{' '}
-                <span style={{ color: T.colors.burgundy }}>anders</span> mache
-              </h2>
-            </FadeIn>
-            
-            <FadeIn delay={100}>
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: T.space.lg,
+                {stat.value}
+              </span>
+              <span style={{
+                fontFamily: T.font,
+                fontSize: '10px',
+                letterSpacing: '0.12em',
+                color: T.colors.mutedLight,
+                textTransform: 'uppercase',
               }}>
-                {[
-                  { title: 'Multi-Channel', desc: 'Nicht nur LinkedIn. GitHub Commits, Stack Overflow, Discord, Meetups.' },
-                  { title: 'Personalisiert', desc: 'Jede Nachricht referenziert echte Projekte. Kein Copy-Paste.' },
-                  { title: 'Tech-Verständnis', desc: 'Ich spreche IT, nicht HR-Deutsch. Gespräche auf Augenhöhe.' },
-                  { title: 'Schnell', desc: '42 Tage ø Time-to-Hire. Weil ich nur IT & Engineering mache.' },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      padding: T.space.lg,
-                      borderLeft: `2px solid ${T.colors.burgundy}`,
-                    }}
-                  >
-                    <div style={{
-                      fontFamily: T.font,
-                      fontSize: '14px',
-                      fontWeight: 500,
-                      color: T.colors.cream,
-                      marginBottom: T.space.xs,
-                    }}>
-                      {item.title}
-                    </div>
-                    <div style={{
-                      fontFamily: T.font,
-                      fontSize: '13px',
-                      color: T.colors.mutedLight,
-                      lineHeight: 1.7,
-                    }}>
-                      {item.desc}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </FadeIn>
-          </div>
-          
-          {/* Track Record */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: isMobile ? 'flex-start' : 'flex-end',
-            textAlign: isMobile ? 'left' : 'right',
-          }}>
-            <FadeIn delay={200}>
-              {[
-                { value: '500+', label: 'Placements' },
-                { value: '98%', label: 'Retention Rate' },
-                { value: '42', label: 'Tage ø Time-to-Hire' },
-              ].map((stat, i) => (
-                <div key={i} style={{ marginBottom: T.space.xl }}>
-                  <div style={{
-                    fontSize: '56px',
-                    fontWeight: 200,
-                    color: T.colors.burgundy,
-                    lineHeight: 1,
-                  }}>
-                    {stat.value}
-                  </div>
-                  <div style={{
-                    fontSize: '10px',
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    color: T.colors.mutedLight,
-                    marginTop: T.space.xs,
-                  }}>
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </FadeIn>
-          </div>
+                {stat.label}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
 
