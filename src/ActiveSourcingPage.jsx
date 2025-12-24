@@ -1315,7 +1315,7 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
         }
       `}</style>
 
-      <TargetCursor targetSelector=".cursor-target, a, button" color={T.colors.black} />
+      <TargetCursor targetSelector=".cursor-target, a, button" color={T.colors.cream} />
       <GrainOverlay />
       <Header currentPage="active-sourcing" />
       <StickyCTA />
