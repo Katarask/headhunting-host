@@ -1,5 +1,5 @@
 # DENIZ PORTFOLIO – GESAMTPROJEKT
-## Stand: 23. Dezember 2024
+## Stand: 25. Dezember 2024
 
 ---
 
@@ -66,18 +66,24 @@ Build:        npm run build → Output in /dist
 ```
 ~/Desktop/deniz-portfolio/
 ├── src/
-│   ├── App.jsx              ← Hauptdatei (~1500 Zeilen)
-│   ├── ElectricBorder.jsx   ← Animierter SVG-Border
-│   ├── ScrambleText.jsx     ← Text-Animation
-│   ├── index.css            ← Globale Styles
-│   └── main.jsx             ← Entry Point
+│   ├── App.jsx                  ← Homepage (~1300 Zeilen)
+│   ├── CostOfVacancyPage.jsx    ← Cost of Vacancy Landing Page
+│   ├── ActiveSourcingPage.jsx   ← Active Sourcing Landing Page (~1600 Zeilen)
+│   ├── ContactPage.jsx          ← Kontaktseite
+│   ├── Header.jsx               ← Shared Navigation Component
+│   ├── designTokens.js          ← Unified Design System
+│   ├── ElectricBorder.jsx       ← Animierter SVG-Border
+│   ├── TargetCursor.jsx         ← Custom Cursor Component
+│   ├── index.css                ← Globale Styles
+│   └── main.jsx                 ← Entry Point mit React Router
 ├── public/
 │   ├── favicon.svg
 │   └── robots.txt
-├── api/                     ← Vercel Serverless Functions
-│   └── contact.js           ← Notion Integration (noch erstellen)
+├── api/                         ← Vercel Serverless Functions
+│   └── contact.js               ← Notion Integration (noch erstellen)
 ├── index.html
 ├── package.json
+├── vercel.json                  ← SPA Routing Config
 └── vite.config.js
 ```
 
@@ -102,18 +108,36 @@ git push
 ## Farbpalette (60/25/10/5 Regel)
 
 ```javascript
+// Aus src/designTokens.js
 colors: {
+  // Base colors
   sand: '#DBD6CC',        // 60% - Hauptfarbe, Backgrounds
-  cream: '#EFEDE5',       // 25% - Text, Akzente  
+  cream: '#EFEDE5',       // 25% - Text, Akzente
   burgundy: '#652126',    // 10% - CTAs, Highlights
   black: '#0a0a0a',       // 5%  - Kontrast-Sections
-  
-  // Utility
   darkAlt: '#151413',
-  muted: 'rgba(10, 10, 10, 0.5)',
-  mutedLight: 'rgba(239, 237, 229, 0.6)',
-  border: 'rgba(101, 33, 38, 0.12)',
+
+  // Aliases
+  white: '#EFEDE5',
+  dark: '#0a0a0a',
+  accent: '#652126',
+
+  // Für dunkle Hintergründe
+  muted: 'rgba(207, 187, 163, 0.5)',
+  mutedLight: '#DBD6CC',
+  mutedLightAlpha: 'rgba(239, 237, 229, 0.55)',
+  border: 'rgba(207, 187, 163, 0.15)',
   borderLight: 'rgba(239, 237, 229, 0.15)',
+  navActive: 'rgba(207, 187, 163, 0.2)',
+
+  // Für helle Hintergründe
+  mutedDark: 'rgba(10, 10, 10, 0.5)',
+  borderDark: 'rgba(10, 10, 10, 0.12)',
+
+  // Status
+  success: '#2D5A3D',
+  warning: '#8B6914',
+  danger: '#652126',
 }
 ```
 
@@ -122,6 +146,28 @@ colors: {
 ```javascript
 font: '"JetBrains Mono", "SF Mono", monospace'
 // Überall verwenden, keine andere Schriftart!
+
+// Type System (aus designTokens.js)
+type: {
+  // Display - Große Hero Headlines
+  displayXL: { size: 'clamp(64px, 12vw, 180px)', weight: 400 },
+  displayL: { size: 'clamp(48px, 8vw, 96px)', weight: 200 },
+  displayM: { size: 'clamp(40px, 7vw, 72px)', weight: 300 },
+
+  // Headlines
+  h2: { size: 'clamp(28px, 4vw, 48px)', weight: 300 },
+  h3: { size: 'clamp(20px, 3vw, 28px)', weight: 300 },
+
+  // Body
+  bodyL: { size: '16px', weight: 300 },
+  bodyM: { size: '14px', weight: 400 },
+  bodyS: { size: '13px', weight: 400 },
+
+  // UI
+  label: { size: '11px', spacing: '0.15em', weight: 400 },
+  button: { size: '11px', spacing: '0.1em', weight: 500 },
+  micro: { size: '10px', spacing: '0.12em', weight: 400 },
+}
 ```
 
 ## Animationen
@@ -217,26 +263,38 @@ space: {
 
 | # | Seite | URL | Keywords | Volume | Diff | Status |
 |---|-------|-----|----------|--------|------|--------|
-| 1 | Cost of Vacancy | /cost-of-vacancy-rechner | cost of vacancy | 140 | 5 | 🔨 Bauen |
-| 2 | Active Sourcing | /active-sourcing | active sourcing, definition, methoden | 3.800 | 16-20 | ✅ Fertig |
-| 3 | Geheimschutz | /geheimschutz-recruiting | vs nfd, ü1 ü2 ü3, geheimschutz | 2.600 | 14-22 | ✅ Fertig |
-| 4 | Personalvermittlung IT | /personalvermittlung-it | personalvermittlung it, it recruiter | 350 | 13-26 | 📋 Geplant |
-| 5 | Talent Acquisition | /talent-acquisition | talent acquisition, personalgewinnung | 840 | 17-23 | 📋 Geplant |
-| 6 | Headhunter München | /headhunter-it-muenchen | headhunter, headhunter münchen | 10.100 | 27 | 📋 Geplant |
-| 7 | Kontakt | /kontakt | - | - | - | ✅ Fertig |
+| 1 | Homepage | / | - | - | - | ✅ Live |
+| 2 | Cost of Vacancy | /cost-of-vacancy | cost of vacancy | 140 | 5 | ✅ Live |
+| 3 | Active Sourcing | /active-sourcing | active sourcing, definition, methoden | 3.800 | 16-20 | ✅ Live |
+| 4 | Kontakt | /kontakt | - | - | - | ✅ Live |
+| 5 | Geheimschutz | /geheimschutz-recruiting | vs nfd, ü1 ü2 ü3, geheimschutz | 2.600 | 14-22 | 📋 Geplant |
+| 6 | Personalvermittlung IT | /personalvermittlung-it | personalvermittlung it, it recruiter | 350 | 13-26 | 📋 Geplant |
+| 7 | Talent Acquisition | /talent-acquisition | talent acquisition, personalgewinnung | 840 | 17-23 | 📋 Geplant |
+| 8 | Headhunter München | /headhunter-it-muenchen | headhunter, headhunter münchen | 10.100 | 27 | 📋 Geplant |
 
 **Gesamt-Traffic-Potenzial: ~17.800/Monat**
 
+## Routing (main.jsx)
+```jsx
+<Routes>
+  <Route path="/" element={<App />} />
+  <Route path="/cost-of-vacancy" element={<CostOfVacancyPage />} />
+  <Route path="/active-sourcing" element={<ActiveSourcingPage />} />
+  <Route path="/kontakt" element={<ContactPage />} />
+</Routes>
+```
+
 ---
 
-## LP 1: Cost of Vacancy
+## LP 1: Cost of Vacancy ✅ LIVE
 
 ### Meta
 ```
-URL:         /cost-of-vacancy-rechner
+URL:         /cost-of-vacancy
 Title:       Cost of Vacancy Rechner: Was kostet Ihre unbesetzte Stelle?
-Description: Berechnen Sie die wahren Kosten Ihrer Vakanz. Kostenloser Rechner 
+Description: Berechnen Sie die wahren Kosten Ihrer Vakanz. Kostenloser Rechner
              für HR & Geschäftsführung.
+Status:      ✅ Live auf Vercel
 ```
 
 ### Keywords
@@ -295,14 +353,15 @@ opportunitaet = totalCost * 0.2
 
 ---
 
-## LP 2: Active Sourcing
+## LP 2: Active Sourcing ✅ LIVE
 
 ### Meta
 ```
 URL:         /active-sourcing
 Title:       Active Sourcing: ROI-Rechner & Methoden für IT-Recruiting
-Description: Was kostet Active Sourcing? Berechnen Sie mit unserem ROI-Rechner, 
+Description: Was kostet Active Sourcing? Berechnen Sie mit unserem ROI-Rechner,
              ob intern, Freelancer oder Headhunter günstiger ist.
+Status:      ✅ Live auf Vercel
 ```
 
 ### Keywords
@@ -338,8 +397,11 @@ Description: Was kostet Active Sourcing? Berechnen Sie mit unserem ROI-Rechner,
    - H2: "Warum Ihre Direktansprache ignoriert wird"
    - 4 brutale Wahrheiten
 
-6. MEINE METHODE
-   - Multi-Channel, Personalisiert, Tech-Verständnis, Schnell
+6. MEINE METHODE (Interaktive Method Cards)
+   - 4 expandierende Karten mit Grid-Animation (Webflow-Style)
+   - Hover: Karte expandiert Breite (flex grow), andere schrumpfen
+   - Multi-Channel, Personalisiert, Tech-Fluent, Schnell
+   - Jede Karte mit Stat-Badge und Hintergrundbild
    - Track Record: 500+, 98%, 42 Tage
 
 7. FAQ (Schema Markup)
@@ -353,8 +415,16 @@ Description: Was kostet Active Sourcing? Berechnen Sie mit unserem ROI-Rechner,
 
 ### Datei
 ```
-active-sourcing-landing-v2.jsx
+src/ActiveSourcingPage.jsx (~1600 Zeilen)
 ```
+
+### Neue Features (25.12.2024)
+- **Method Cards mit Grid-Animation**: Webflow-Style expandierende Karten
+- **Flex-Grow Effect**: Gehoverte Karte wächst (flex: 2.5), andere schrumpfen (flex: 0.7)
+- **Grid-Template-Rows Animation**: Content erscheint smooth (0fr → 1fr)
+- **Geschwister-Fade**: Nicht-gehoverte Karten faden aus (opacity: 0.4)
+- **Stat-Badges**: Jede Karte zeigt eine Key-Metrik
+- **Keyboard Accessible**: :focus-within Support
 
 ---
 
@@ -556,17 +626,35 @@ Deniz Tulay zusammen."
 
 ## Fertige React Components
 
-| Datei | Beschreibung |
-|-------|--------------|
-| `active-sourcing-landing-v2.jsx` | Active Sourcing LP mit ROI-Rechner |
-| `geheimschutz-recruiting-lp.jsx` | Geheimschutz LP für Defense |
-| `contact-form-notion.jsx` | Contact Form mit Notion Backend |
+| Datei | Beschreibung | Status |
+|-------|--------------|--------|
+| `src/App.jsx` | Homepage mit 6 Sections, Vimeo Background | ✅ Live |
+| `src/CostOfVacancyPage.jsx` | Cost of Vacancy LP mit interaktivem Rechner | ✅ Live |
+| `src/ActiveSourcingPage.jsx` | Active Sourcing LP mit ROI-Rechner & Method Cards | ✅ Live |
+| `src/ContactPage.jsx` | Kontaktseite | ✅ Live |
+| `src/Header.jsx` | Shared Navigation (Terminal-Style Breadcrumb) | ✅ Live |
+| `src/designTokens.js` | Unified Design System | ✅ Live |
+| `src/ElectricBorder.jsx` | Animierter SVG-Border Component | ✅ Live |
+| `src/TargetCursor.jsx` | Custom Cursor mit Corner-Tracking | ✅ Live |
+
+## Shared Components
+
+### Header.jsx
+- Terminal-Style Navigation: `● ~home / cost-of-vacancy / active-sourcing`
+- Active State: Aktuelle Seite in Burgundy
+- Props: `currentPage` für Active-Highlighting
+- Fixed Position mit z-index: 10000
+
+### designTokens.js
+- Unified Colors, Fonts, Spacing, Easing, Timing
+- Import: `import T from './designTokens'`
+- Verwendung: `T.colors.burgundy`, `T.space.lg`, etc.
 
 ## Noch zu erstellen
 
 | Datei | Beschreibung |
 |-------|--------------|
-| `cost-of-vacancy-lp.jsx` | CoV LP mit Rechner |
+| `geheimschutz-recruiting-lp.jsx` | Geheimschutz LP für Defense |
 | `personalvermittlung-it-lp.jsx` | IT Recruiting LP |
 | `talent-acquisition-lp.jsx` | Talent Acquisition Guide |
 | `/api/contact.js` | Vercel Serverless Function für Notion |
@@ -575,15 +663,24 @@ Deniz Tulay zusammen."
 
 # ✅ TO-DO LISTE
 
-## Kurzfristig (Diese Woche)
+## Erledigt (Dezember 2024)
 
-- [ ] Cost of Vacancy LP bauen
-- [ ] LPs in Portfolio einbauen (React Router)
-- [ ] Notion Integration einrichten
+- [x] Cost of Vacancy LP bauen ✅
+- [x] Active Sourcing LP bauen ✅
+- [x] LPs in Portfolio einbauen (React Router) ✅
+- [x] Unified Design Tokens System ✅
+- [x] Shared Header Component ✅
+- [x] Method Cards mit Grid-Animation (Webflow-Style) ✅
+- [x] Vercel Deployment mit SPA Routing ✅
+
+## Kurzfristig (Januar)
+
+- [ ] Notion Integration für Kontaktformular
 - [ ] Vercel Function `/api/contact.js` erstellen
-- [ ] Deployen
+- [ ] Geheimschutz LP bauen
+- [ ] Mobile Responsive verbessern
 
-## Mittelfristig (Januar)
+## Mittelfristig (Januar/Februar)
 
 - [ ] Personalvermittlung IT LP bauen
 - [ ] Talent Acquisition LP bauen
@@ -596,7 +693,6 @@ Deniz Tulay zusammen."
 - [ ] Headhunter IT München LP (Local SEO)
 - [ ] Google Business Profile (optional)
 - [ ] Gastbeiträge / Podcast-Auftritte
-- [ ] Mobile & Tablet Responsive verbessern
 - [ ] PageSpeed optimieren (Ziel: 85+)
 
 ---
@@ -631,5 +727,31 @@ Domain:    denizleventtulay.de
 
 ---
 
+# 🆕 CHANGELOG
+
+## 25. Dezember 2024
+- **Method Cards Redesign**: Neue interaktive Karten in ActiveSourcingPage
+  - Webflow-Style Grid-Animation (`grid-template-rows: 0fr → 1fr`)
+  - Flex-Grow Effect: Gehoverte Karte expandiert, andere schrumpfen
+  - Geschwister-Fade Effect: Nicht-gehoverte Karten faden aus
+- **Cursor Fix**: TargetCursor Farbe auf cream für Sichtbarkeit auf dunklen Sections
+- **Design Tokens**: Timing-Werte hinzugefügt (`fast`, `medium`, `slow`)
+
+## 24. Dezember 2024
+- **Unified Header**: Shared Header Component für alle Seiten
+- **Terminal-Style Navigation**: `● ~home / cost-of-vacancy / active-sourcing`
+- **Active State Indicator**: Aktuelle Seite wird in Burgundy hervorgehoben
+- **Design Tokens System**: Zentrales `designTokens.js` für konsistentes Styling
+- **React Router Integration**: Alle Landing Pages über Routing erreichbar
+- **Vercel SPA Config**: `vercel.json` für Client-Side Routing
+
+## 23. Dezember 2024
+- Projekt-Dokumentation erstellt
+- Cost of Vacancy Page initial gebaut
+- Active Sourcing Page initial gebaut
+
+---
+
 *Dokument erstellt: 23. Dezember 2024*
+*Zuletzt aktualisiert: 25. Dezember 2024*
 *Für Nutzung mit Claude Code*
