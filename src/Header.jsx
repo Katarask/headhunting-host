@@ -51,7 +51,8 @@ const Header = ({ currentPage = 'home' }) => {
   // Dynamic colors based on background
   const textColor = onLightBg ? T.colors.black : T.colors.cream;
   const mutedColor = onLightBg ? T.colors.mutedDark : T.colors.muted;
-  const activeColor = T.colors.burgundy; // Burgundy works on both
+  const activeColor = onLightBg ? T.colors.burgundy : T.colors.cream; // Cream on dark, burgundy on light
+  const dotColor = T.colors.burgundy;
   const dotGlow = onLightBg ? 'none' : `0 0 8px ${T.colors.burgundy}`;
 
   return (
@@ -95,9 +96,9 @@ const Header = ({ currentPage = 'home' }) => {
           width: '6px',
           height: '6px',
           borderRadius: '50%',
-          background: T.colors.burgundy,
+          background: dotColor,
           boxShadow: dotGlow,
-          transition: 'box-shadow 0.3s ease',
+          transition: 'all 0.3s ease',
         }} />
         <Link to="/" className="cursor-target" style={{
           color: isHome ? activeColor : mutedColor,
