@@ -8,42 +8,55 @@ import T from './designTokens';
 // Decrypted Text
 const DecryptedText = ({ text, speed = 50, delay = 0 }) => {
   const [displayText, setDisplayText] = useState('');
-  const [started, setStarted] = useState(false);
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*';
-  
-  useEffect(() => { 
-    const t = setTimeout(() => setStarted(true), delay); 
-    return () => clearTimeout(t); 
-  }, [delay]);
-  
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef(null);
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+
+  // Trigger animation when element scrolls into view
   useEffect(() => {
-    if (!started) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setTimeout(() => setIsVisible(true), delay);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [delay, hasAnimated]);
+
+  // Run scramble animation when visible
+  useEffect(() => {
+    if (!isVisible) return;
+    setHasAnimated(true);
     let frameId;
     const startTime = performance.now();
     const duration = text.length * speed;
-    
+
     const animate = (now) => {
       const elapsed = now - startTime;
       const iteration = (elapsed / duration) * text.length;
-      
+
       setDisplayText(text.split('').map((char, i) => {
         if (char === ' ') return ' ';
         if (i < iteration) return text[i];
         return chars[Math.floor(Math.random() * chars.length)];
       }).join(''));
-      
+
       if (iteration < text.length) {
         frameId = requestAnimationFrame(animate);
       } else {
         setDisplayText(text);
       }
     };
-    
+
     frameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frameId);
-  }, [text, speed, started]);
-  
-  return <span style={{ fontFamily: T.font }}>{displayText || text.replace(/./g, ' ')}</span>;
+  }, [text, speed, isVisible]);
+
+  return <span ref={ref} style={{ fontFamily: T.font }}>{displayText || text.replace(/./g, ' ')}</span>;
 };
 
 // FadeIn
@@ -1078,7 +1091,7 @@ export default function CostOfVacancyPage() {
 
             {/* Right - CTA Button */}
             <Link to="/kontakt" style={{ textDecoration: 'none' }}>
-              <ElectricBorderButton variant="primary">
+              <ElectricBorderButton variant="dark">
                 Kontakt
               </ElectricBorderButton>
             </Link>
