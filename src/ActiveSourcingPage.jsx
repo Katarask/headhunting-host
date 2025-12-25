@@ -1323,7 +1323,7 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
       {/* ════════════════════════════════════════════════════════════════
           HERO - Provokation
       ════════════════════════════════════════════════════════════════ */}
-      <section className="snap-section" style={{
+      <section data-theme="light" className="snap-section" style={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -1453,6 +1453,7 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
       ════════════════════════════════════════════════════════════════ */}
       <section
         id="rechner"
+        data-theme="dark"
         className="snap-section"
         style={{
           background: T.colors.black,
@@ -1489,7 +1490,7 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
       {/* ════════════════════════════════════════════════════════════════
           PAIN POINTS - Brutal ehrlich
       ════════════════════════════════════════════════════════════════ */}
-      <section className="snap-section" style={{
+      <section data-theme="light" className="snap-section" style={{
         background: T.colors.sand,
         padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,
         minHeight: '100vh',
@@ -1524,7 +1525,7 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
       {/* ════════════════════════════════════════════════════════════════
           MEINE METHODE - Expanding Cards (True Webflow Style)
       ════════════════════════════════════════════════════════════════ */}
-      <section className="snap-section" style={{
+      <section data-theme="dark" className="snap-section" style={{
         background: T.colors.black,
         color: T.colors.cream,
         minHeight: '100vh',
@@ -1605,7 +1606,7 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
       {/* ════════════════════════════════════════════════════════════════
           FAQ SECTION
       ════════════════════════════════════════════════════════════════ */}
-      <section className="snap-section" style={{
+      <section data-theme="dark" className="snap-section" style={{
         background: T.colors.black,
         color: T.colors.cream,
         padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,
@@ -1672,7 +1673,7 @@ Entwickler merken in 30 Sekunden, ob ihr Gegenüber die Materie versteht. Tut er
       {/* ════════════════════════════════════════════════════════════════
           CTA
       ════════════════════════════════════════════════════════════════ */}
-      <section className="snap-section" style={{
+      <section data-theme="dark" className="snap-section" style={{
         background: T.colors.burgundy,
         color: T.colors.cream,
         padding: `${T.space.section} ${isMobile ? '6vw' : '10vw'}`,

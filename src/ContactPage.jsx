@@ -290,7 +290,7 @@ export default function ContactPage() {
   ];
 
   return (
-    <div style={{
+    <div data-theme="light" style={{
       minHeight: '100vh',
       background: T.colors.sand,
       fontFamily: T.font,
@@ -450,7 +450,7 @@ export default function ContactPage() {
       </div>
 
       {/* Footer */}
-      <footer style={{
+      <footer data-theme="dark" style={{
         background: T.colors.black,
         padding: '40px 8vw',
         display: 'flex',

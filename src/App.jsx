@@ -943,15 +943,15 @@ export default function App() {
       <FixedNavbar activeSection={activeSection} onNavigate={navTo} />
 
       {/* HERO - Section 1 */}
-      <section style={{ 
-        ...cardBase, 
-        backgroundColor: tokens.colors.black, 
+      <section data-theme="dark" style={{
+        ...cardBase,
+        backgroundColor: tokens.colors.black,
         zIndex: activeSection === 1 ? 10 : 1,
         opacity: activeSection === 1 ? 1 : 0,
         pointerEvents: activeSection === 1 ? 'auto' : 'none',
         transition: 'opacity 0.8s ease',
-        display: 'flex', flexDirection: 'column', justifyContent: 'space-between', 
-        ...sectionPadding, position: "relative", overflow: "hidden" 
+        display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+        ...sectionPadding, position: "relative", overflow: "hidden"
       }}>
         {/* Background Video */}
         {/* Vimeo Background Video */}
@@ -1017,9 +1017,9 @@ export default function App() {
       </section>
 
       {/* ABOUT - Section 2: Cost of Vacancy */}
-      <section style={{
+      <section data-theme="light" style={{
         ...cardBase,
-        backgroundColor: tokens.colors.sand, 
+        backgroundColor: tokens.colors.sand,
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 2 ? 10 : 1,
         opacity: activeSection === 2 ? 1 : 0,
@@ -1095,9 +1095,9 @@ export default function App() {
 
 
       {/* EXPERTISE - Section 3 */}
-      <section style={{ 
-        ...cardBase, 
-        backgroundColor: tokens.colors.black, 
+      <section data-theme="dark" style={{
+        ...cardBase,
+        backgroundColor: tokens.colors.black,
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 3 ? 10 : 1,
         opacity: activeSection === 3 ? 1 : 0,
@@ -1151,15 +1151,15 @@ export default function App() {
 
 
       {/* BLOG - Section 4 */}
-      <section style={{ 
-        ...cardBase, 
-        backgroundColor: tokens.colors.darkAlt, 
+      <section data-theme="dark" style={{
+        ...cardBase,
+        backgroundColor: tokens.colors.darkAlt,
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 4 ? 10 : 1,
         opacity: activeSection === 4 ? 1 : 0,
         pointerEvents: activeSection === 4 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
-        display: 'grid', 
+        display: 'grid',
         gridTemplateColumns: '1fr 1fr',
       }}>
         {/* Left - Infinite Scroll Blog List with Drag */}
@@ -1213,15 +1213,15 @@ export default function App() {
         </div>
       </section>
       {/* PODCAST - Section 5 */}
-      <section style={{ 
-        ...cardBase, 
-        backgroundColor: tokens.colors.sand, 
+      <section data-theme="light" style={{
+        ...cardBase,
+        backgroundColor: tokens.colors.sand,
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 5 ? 10 : 1,
         opacity: activeSection === 5 ? 1 : 0,
         pointerEvents: activeSection === 5 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
-        display: 'flex', flexDirection: 'column', justifyContent: 'center', 
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
         ...sectionPadding,
       }}>
         <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.accent, fontFamily: tokens.fontMono, margin: '0 0 32px 0', textTransform: 'uppercase' }}>05 — Podcast</p>
@@ -1237,15 +1237,15 @@ export default function App() {
       </section>
 
       {/* CONTACT - Section 6 */}
-      <section style={{ 
-        ...cardBase, 
-        backgroundColor: tokens.colors.dark, 
+      <section data-theme="dark" style={{
+        ...cardBase,
+        backgroundColor: tokens.colors.dark,
         borderRadius: '32px 32px 0 0',
         zIndex: activeSection === 6 ? 10 : 1,
         opacity: activeSection === 6 ? 1 : 0,
         pointerEvents: activeSection === 6 ? 'auto' : 'none',
         transition: 'opacity 0.5s ease',
-        display: 'flex', flexDirection: 'column', justifyContent: 'space-between', 
+        display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
         ...sectionPadding,
       }}>
         <p style={{ fontSize: '11px', letterSpacing: '0.3em', color: tokens.colors.muted, fontFamily: tokens.fontMono, margin: 0, textTransform: 'uppercase' }}>06</p>
