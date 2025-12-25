@@ -4,7 +4,7 @@ import T from './designTokens';
 
 // ============================================
 // HEADER - Navigation with Dynamic Colors
-// Uses IntersectionObserver on [data-theme] sections
+// Uses scroll position to detect section themes
 // ============================================
 
 const Header = ({ currentPage = 'home' }) => {
@@ -17,36 +17,36 @@ const Header = ({ currentPage = 'home' }) => {
   const [onLightBg, setOnLightBg] = useState(false);
 
   useEffect(() => {
-    // Find all sections with data-theme attribute
-    const sections = document.querySelectorAll('[data-theme]');
+    const checkSection = () => {
+      const sections = document.querySelectorAll('[data-theme]');
+      if (sections.length === 0) return;
 
-    if (sections.length === 0) {
-      // No themed sections, stay with default
-      return;
-    }
+      const headerOffset = 60; // Header height
+      const scrollY = window.scrollY + headerOffset;
 
-    // Create observer that triggers when section enters top of viewport
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Find the entry that is most visible at the top
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const theme = entry.target.getAttribute('data-theme');
-            setOnLightBg(theme === 'light');
-          }
+      for (const section of sections) {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = rect.top + window.scrollY;
+        const sectionBottom = sectionTop + rect.height;
+
+        if (scrollY >= sectionTop && scrollY < sectionBottom) {
+          setOnLightBg(section.dataset.theme === 'light');
+          return;
         }
-      },
-      {
-        // Trigger when section crosses the top 10% of viewport
-        rootMargin: '-5% 0px -90% 0px',
-        threshold: 0
       }
-    );
+    };
 
-    sections.forEach(section => observer.observe(section));
+    // Initial check after DOM is ready
+    setTimeout(checkSection, 100);
 
-    return () => observer.disconnect();
-  }, [currentPage]); // Re-run when page changes
+    window.addEventListener('scroll', checkSection, { passive: true });
+    window.addEventListener('resize', checkSection);
+
+    return () => {
+      window.removeEventListener('scroll', checkSection);
+      window.removeEventListener('resize', checkSection);
+    };
+  }, [currentPage]);
 
   // Dynamic colors based on background
   const textColor = onLightBg ? T.colors.black : T.colors.cream;
