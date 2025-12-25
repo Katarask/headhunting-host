@@ -811,7 +811,7 @@ export default function CostOfVacancyPage() {
       <StickyCTA />
 
       {/* HERO */}
-      <section className="snap-section" style={{
+      <section data-theme="dark" className="snap-section" style={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -857,7 +857,7 @@ export default function CostOfVacancyPage() {
       <Marquee items={marqueeItems} speed={35} />
 
       {/* CALCULATOR */}
-      <section id="rechner" className="snap-section" style={{ background: T.colors.sand, padding: '100px 8vw', minHeight: '100vh' }}>
+      <section id="rechner" data-theme="light" className="snap-section" style={{ background: T.colors.sand, padding: '100px 8vw', minHeight: '100vh' }}>
         <FadeIn>
           <div style={{ fontSize: T.type.micro.size, letterSpacing: '0.3em', textTransform: 'uppercase', color: T.colors.mutedDark, marginBottom: '14px' }}>
             <span style={{ color: T.colors.burgundy }}>02</span> Rechner
@@ -870,7 +870,7 @@ export default function CostOfVacancyPage() {
       </section>
 
       {/* SOCIAL PROOF - Split Design: Schwarz oben, Burgundy unten */}
-      <section className="snap-section" style={{
+      <section data-theme="dark" className="snap-section" style={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -1007,7 +1007,7 @@ export default function CostOfVacancyPage() {
       </section>
 
       {/* FAQ */}
-      <section className="snap-section" style={{ background: T.colors.darkAlt, padding: '100px 8vw', minHeight: '100vh' }}>
+      <section data-theme="dark" className="snap-section" style={{ background: T.colors.darkAlt, padding: '100px 8vw', minHeight: '100vh' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '80px', alignItems: 'start' }}>
           <FadeIn>
             <div style={{ fontSize: T.type.micro.size, letterSpacing: '0.3em', textTransform: 'uppercase', color: T.colors.muted, marginBottom: '14px' }}>
@@ -1022,7 +1022,7 @@ export default function CostOfVacancyPage() {
       </section>
 
       {/* CTA - Layout wie Mainpage */}
-      <section className="snap-section" style={{
+      <section data-theme="dark" className="snap-section" style={{
         background: T.colors.burgundy,
         padding: '60px 8vw',
         minHeight: '100vh',

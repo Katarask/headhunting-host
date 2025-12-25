@@ -1,25 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import T from './designTokens';
 
 // ============================================
 // HEADER - Navigation with Dynamic Colors
-// Adapts colors based on current section background
+// Uses IntersectionObserver on [data-theme] sections
 // ============================================
-
-// Calculate luminance from RGB
-const getLuminance = (r, g, b) => (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-
-// Check if color is light (needs dark text)
-const isLightColor = (color) => {
-  if (!color) return false;
-  const rgbMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-  if (rgbMatch) {
-    const [, r, g, b] = rgbMatch.map(Number);
-    return getLuminance(r, g, b) > 0.6;
-  }
-  return false;
-};
 
 const Header = ({ currentPage = 'home' }) => {
   const isHome = currentPage === 'home';
@@ -30,68 +16,37 @@ const Header = ({ currentPage = 'home' }) => {
   // Track if current section has light background
   const [onLightBg, setOnLightBg] = useState(false);
 
-  const checkBackground = useCallback(() => {
-    // Sample multiple points across the header area
-    const headerY = 50;
-    const points = [
-      window.innerWidth * 0.1,  // Left
-      window.innerWidth * 0.5,  // Center
-      window.innerWidth * 0.9   // Right
-    ];
+  useEffect(() => {
+    // Find all sections with data-theme attribute
+    const sections = document.querySelectorAll('[data-theme]');
 
-    for (const headerX of points) {
-      const elements = document.elementsFromPoint(headerX, headerY);
-
-      for (const el of elements) {
-        // Skip header and its children
-        if (el.tagName === 'HEADER' || el.closest('header')) continue;
-        // Skip overlays and fixed elements
-        if (el.style.position === 'fixed' && el.style.pointerEvents === 'none') continue;
-
-        const style = window.getComputedStyle(el);
-        const bgColor = style.backgroundColor;
-
-        // Skip fully transparent
-        if (bgColor === 'transparent' || bgColor === 'rgba(0, 0, 0, 0)') continue;
-
-        // Check alpha channel for semi-transparent backgrounds
-        const alphaMatch = bgColor.match(/rgba\(\d+,\s*\d+,\s*\d+,\s*([\d.]+)\)/);
-        if (alphaMatch && parseFloat(alphaMatch[1]) < 0.3) continue;
-
-        // Found a solid enough background - check if light
-        if (isLightColor(bgColor)) {
-          setOnLightBg(true);
-          return;
-        } else {
-          setOnLightBg(false);
-          return;
-        }
-      }
+    if (sections.length === 0) {
+      // No themed sections, stay with default
+      return;
     }
 
-    // Default based on page - most pages start dark
-    setOnLightBg(false);
-  }, []);
+    // Create observer that triggers when section enters top of viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the entry that is most visible at the top
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const theme = entry.target.getAttribute('data-theme');
+            setOnLightBg(theme === 'light');
+          }
+        }
+      },
+      {
+        // Trigger when section crosses the top 10% of viewport
+        rootMargin: '-5% 0px -90% 0px',
+        threshold: 0
+      }
+    );
 
-  useEffect(() => {
-    // Initial check
-    checkBackground();
+    sections.forEach(section => observer.observe(section));
 
-    // Check on scroll
-    const handleScroll = () => {
-      requestAnimationFrame(checkBackground);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Also check on resize
-    window.addEventListener('resize', checkBackground);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', checkBackground);
-    };
-  }, [checkBackground]);
+    return () => observer.disconnect();
+  }, [currentPage]); // Re-run when page changes
 
   // Dynamic colors based on background
   const textColor = onLightBg ? T.colors.black : T.colors.cream;
